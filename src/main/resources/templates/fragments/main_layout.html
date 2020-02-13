@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="en-GB">
+<head>
+  <script  th:href="@{/js/jquery-3.4.1.min.js}"></script>
+  <script  th:href="@{/js/bootstrap.min.js}"></script>
+  <script  th:href="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+</head>
+<body>
+<!--header.html  that's here  -->
+<div th:replace="fragments/header :: header"></div>
+
+<div layout:fragment="content"></div>
+<!--footer.html  that's here  -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
