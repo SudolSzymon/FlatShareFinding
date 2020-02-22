@@ -1,24 +1,23 @@
 package com.szymon.ffproject.web.config;
 
 import com.google.gson.Gson;
-import com.szymon.ffproject.database.entity.AuthenticationUser;
-import com.szymon.ffproject.database.repository.AuthenticationUserRepository;
+import com.szymon.ffproject.database.entity.User;
+import com.szymon.ffproject.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserDetailsProvider implements UserDetailsService {
 
     @Autowired
-    AuthenticationUserRepository repository;
+    UserRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        AuthenticationUser user = repository.findFirstAuthenticationUserByName(username);
+        User user = repository.findById(username).orElseGet(()->null);
         System.out.println(new Gson().toJson(repository.findAll()));
 
         UserBuilder builder;

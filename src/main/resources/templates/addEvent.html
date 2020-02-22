@@ -1,0 +1,16 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/main_layout}" lang="en-GB">
+<head>
+  <title>Household creation</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+</head>
+
+<body>
+<div layout:fragment="content" class="container">
+  <div class="card bg-light">
+    <article th:fragment="form" class="card-body mx-auto" style="max-width: 400px;">
+      <div th:replace="fragments/form :: form"></div>
+    </article>
+  </div>
+</div>
+</body>
+</html>

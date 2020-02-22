@@ -10,14 +10,11 @@ import org.springframework.context.ApplicationContext;
 @ImportAutoConfiguration
 public class FfProjectApplication {
 
-
-
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(FfProjectApplication.class, args);
 
         DBInitializer initializer = (DBInitializer) applicationContext.getBean("DBInitializer");
         initializer.init();
     }
-
 
 }

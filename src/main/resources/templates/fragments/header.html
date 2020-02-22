@@ -6,24 +6,20 @@
       <a class="navbar-brand" href="#">
         "FFProject"
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+              aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/home">Home
-              <span class="sr-only">(current)</span>
-            </a>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{|~/calendar/${#authentication.name}|}">Calendar</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/random">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="javascript: document.logoutForm.submit()" > Logout</a>
+            <form name="logoutForm" th:action="@{/user/logout}" method="post" th:hidden="true">
+              <input hidden type="submit" value="Sign Out"/>
+            </form>
           </li>
         </ul>
       </div>

@@ -12,13 +12,13 @@
       <h4 class="card-title mt-3 text-center">Create Account</h4>
       <p class="text-center">Get started with your free account</p>
 
-      <form action="#" th:action="@{/create}" th:object="${userData}" method="post">
+      <form action="#" th:action="@{/user/create}" th:object="${user}" method="post">
         <div class="form-group input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"> <i class="fa fa-user"></i> </span>
           </div>
           <label>
-            <input name="user" class="form-control" placeholder="Full name" type="text" th:field="*{user}">
+            <input name="user" class="form-control" placeholder="Full name" type="text" th:field="*{name}">
           </label>
         </div> <!-- form-group// -->
 
@@ -27,7 +27,7 @@
             <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
           </div>
           <label>
-            <input class="form-control" name="pass" placeholder="Create password" type="password" th:field="*{pass}">
+            <input class="form-control" name="password" placeholder="Create password" type="password" th:field="*{password}">
           </label>
         </div> <!-- form-group// -->
         <div class="form-group">

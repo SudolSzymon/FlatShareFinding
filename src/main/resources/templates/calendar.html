@@ -1,0 +1,33 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/main_layout}" lang="en-GB">
+<head>
+  <title>Calendar</title>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js}"></script>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js}"></script>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js}"></script>
+  <script th:inline="javascript">
+    $(document).ready(function () {
+
+      let calendarConfig = /*[[${calendarConfig}]]*/ null;
+      $('#calendar').fullCalendar(JSON.parse(calendarConfig));
+
+    });
+  </script>
+  <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css}"/>
+  <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css}"/>
+
+</head>
+
+<body>
+<div layout:fragment="content" class="container">
+  <div class="ui container">
+    <div class="ui grid">
+      <div class="ui sixteen column">
+        <div id="calendar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+
