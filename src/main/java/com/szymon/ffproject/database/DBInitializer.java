@@ -23,16 +23,18 @@ public class DBInitializer {
 
     public DBInitializer(AmazonDynamoDB amazonDynamoDB) {this.amazonDynamoDB = amazonDynamoDB;}
 
-    public  void  init(){
-    try {
-        dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
-       // amazonDynamoDB.deleteTable("Users");
-        createTable(User.class);
-        createTable(Household.class);
-        logger.info(amazonDynamoDB.listTables());
-    } catch (Exception e) {
-        logger.error("Unable to initialise tables", e);
-    }
+    public void init() {
+        try {
+            dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
+            //amazonDynamoDB.deleteTable("Users");
+            //amazonDynamoDB.deleteTable("Households");
+
+            createTable(User.class);
+            createTable(Household.class);
+            logger.info(amazonDynamoDB.listTables());
+        } catch (Exception e) {
+            logger.error("Unable to initialise tables", e);
+        }
     }
 
     private void createTable(Class<?> table) {

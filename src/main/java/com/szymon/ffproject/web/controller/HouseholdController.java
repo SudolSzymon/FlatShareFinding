@@ -1,13 +1,17 @@
 package com.szymon.ffproject.web.controller;
 
-import com.szymon.ffproject.web.util.FormUtil;
+import com.google.common.collect.Sets;
 import com.szymon.ffproject.database.entity.Household;
+import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
-import java.util.ArrayList;
-import java.util.List;
+import com.szymon.ffproject.database.repository.UserRepository;
+import com.szymon.ffproject.web.util.FormUtil;
+import com.szymon.ffproject.web.util.annotation.InputType;
+import java.security.Principal;
+import java.util.HashSet;
 import java.util.Optional;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Set;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,27 +20,27 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping(value = "/house")
-public class HouseholdController {
+public class HouseholdController extends GenericController {
 
     private final PasswordEncoder passwordEncoder;
-    private static final Logger logger = Logger.getLogger(HouseholdController.class);
 
-    private final HouseholdRepository repository;
-
-    public HouseholdController(HouseholdRepository repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
+    public HouseholdController(HouseholdRepository repository, PasswordEncoder passwordEncoder,
+                               UserRepository repositoryU) {
+        super(repositoryU, repository);
         this.passwordEncoder = passwordEncoder;
+
     }
 
-    @GetMapping("/{name}")
-    public String login(@PathVariable String name, Model model) {
-        Optional<Household> household = repository.findById(name);
-        List<String> members = household.isPresent() ? household.get().getMembers() : new ArrayList<>();
-        model.addAttribute("members", members);
+    @GetMapping("/view")
+    public String login(Model model, Principal principal) {
+        Household house = getHousehold(principal);
+        model.addAttribute("members", house.getMembers());
+        model.addAttribute("houseName", house.getName());
         return "household";
     }
 
@@ -48,10 +52,61 @@ public class HouseholdController {
     }
 
     @PostMapping(value = "/create")
-    public RedirectView create(@ModelAttribute Household household) {
+    public RedirectView create(@ModelAttribute Household household, Principal principal) {
         household.encrypt(passwordEncoder);
-        repository.save(household);
+        household.setMembers(Sets.newHashSet(principal.getName()));
+        User user = repositoryU.findById(principal.getName()).get();
+        user.setHouseName(household.getName());
+        repositoryU.save(user);
+        repositoryH.save(household);
         return new RedirectView("/house/" + household.getName());
+    }
+
+
+    @GetMapping(value = "/register")
+    public String prepareRegister(Model model, HouseholdSignUpData data) {
+        FormUtil.addForm(model, data, "/house/register", "Register to HouseHold");
+        return "addHousehold";
+    }
+
+
+    @PostMapping(value = "/register")
+    public RedirectView register(@ModelAttribute HouseholdSignUpData householdSignUpData, Principal principal) {
+        Household house = repositoryH.findById(householdSignUpData.name).get();
+        User user = repositoryU.findById(principal.getName()).get();
+        if (passwordEncoder.matches(householdSignUpData.getPass(), house.getPassword())) {
+            Set<String> members = house.getMembers();
+            members.add(principal.getName());
+            house.setMembers(members);
+            repositoryH.save(house);
+            user.setHouseName(house.getName());
+            repositoryU.save(user);
+            return new RedirectView("/house/" + house.getName());
+        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Wrong household password or name");
+
+    }
+
+    private static class HouseholdSignUpData {
+
+        private String name;
+        @InputType(type = "pass")
+        private String pass;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPass() {
+            return pass;
+        }
+
+        public void setPass(String pass) {
+            this.pass = pass;
+        }
     }
 
 

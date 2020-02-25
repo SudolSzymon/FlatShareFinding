@@ -5,7 +5,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.web.util.annotation.ValueSelectInputType;
 import com.szymon.ffproject.database.converter.DateTimeConverter;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +20,6 @@ public class Event {
     private LocalDateTime end;
     @FormTransient
     private boolean allDay = false;
-    @ValueSelectInputType(values = {"test", "adminy"})
     private transient List<String> participants;
 
 

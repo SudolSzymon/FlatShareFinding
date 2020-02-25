@@ -1,0 +1,38 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/main_layout}" lang="en-GB">
+<head>
+  <title>Shop lists</title>
+</head>
+
+<body>
+<div layout:fragment="content" class="container">
+  <table>
+    <thead>
+    <tr>
+      <th>Title</th>
+      <th>List</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry: ${map}">
+      <td><span th:text="${entry.key}"> name </span></td>
+      <td>
+        <ul>
+          <li th:each="item: ${entry.value}">
+            <span th:text="${item.name}"></span> X <span th:text="${item.count}"></span>
+          </li>
+        </ul>
+      </td>
+      <td><a th:href="@{'/shop/edit/'+ ${entry.key}}">edit</a></td>
+      <td><a th:href="@{'/shop/delete/'+ ${entry.key}}">delete</a></td>
+    </tr>
+    <tr>
+      <form th:action="@{'/shop/create'}" th:object="${stringWrap}" method="post">
+        <td colspan="2"><input type="text" th:field="*{value}"/></td>
+        <td><input type="submit" value="Add"/></td>
+      </form>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>

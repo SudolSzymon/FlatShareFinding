@@ -1,0 +1,29 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/main_layout}" lang="en-GB">
+<head>
+  <title>Expenses</title>
+</head>
+
+<body>
+<div layout:fragment="content" class="container">
+  <table>
+    <thead>
+    <tr>
+      <th>Title</th>
+      <th>Borrower</th>
+      <th>Lender</th>
+      <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${list}">
+      <td><span th:text="${item.title}"> name </span></td>
+      <td><span th:text="${item.borrower}"> name </span></td>
+      <td><span th:text="${item.lender}"> name </span></td>
+      <td><span th:text="${item.amount}"> name </span></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
