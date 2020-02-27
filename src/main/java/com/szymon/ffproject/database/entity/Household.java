@@ -11,16 +11,21 @@ import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @DynamoDBTable(tableName = "Households")
 public class Household {
 
+    @NotBlank
     @Unmodifiable
     private String name;
+    @NotBlank
     @InputType(type = "pass")
     private String password;
     @FormTransient
@@ -41,6 +46,8 @@ public class Household {
 
     @DynamoDBTyped(DynamoDBAttributeType.SS)
     public Set<String> getMembers() {
+        if(members == null)
+            members = new HashSet<>();
         return members;
     }
 

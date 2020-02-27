@@ -2,12 +2,16 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @DynamoDBDocument
 public class ShopItem {
 
+    @NotBlank
     private String name;
 
+    @Positive
     private double count;
 
 

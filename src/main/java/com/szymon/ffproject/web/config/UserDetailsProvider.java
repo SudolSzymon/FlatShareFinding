@@ -24,7 +24,7 @@ public class UserDetailsProvider implements UserDetailsService {
         if (user != null) {
             builder = org.springframework.security.core.userdetails.User.withUsername(username);
             builder.password(user.getPassword());
-            builder.roles(user.getRolesAsArray());
+            builder.roles(user.getRoles().toArray(new String[0]));
         } else {
             throw new UsernameNotFoundException("User not found.");
         }

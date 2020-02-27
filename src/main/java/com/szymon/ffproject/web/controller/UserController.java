@@ -8,6 +8,7 @@ import com.szymon.ffproject.database.repository.UserRepository;
 import com.szymon.ffproject.web.util.EntityUtil;
 import com.szymon.ffproject.web.util.FormUtil;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,17 +46,16 @@ public class UserController extends GenericController {
 
     @PostMapping(value = "/create")
     public RedirectView create(@ModelAttribute User user) {
-        logger.info("Created user: " + new Gson()
-            .toJson(user.encrypt(passwordEncoder).setRoles("admin", "user").setCalendar(new UserCalendar())));
+        user.encrypt(passwordEncoder).setRoles(Arrays.asList("admin", "user"));
         repositoryU.save(user);
+        logger.info("Created user: " + new Gson().toJson(user));
         return new RedirectView("/");
     }
 
     @PostMapping(value = "/save")
     public RedirectView save(@ModelAttribute User user, Principal principal) {
-        Optional<User> oldUser = repositoryU.findById(principal.getName());
-        EntityUtil.update(user, oldUser.get());
-        logger.info("Created user: " + new Gson().toJson(user.encrypt(passwordEncoder).setRoles("admin", "user")));
+        User oldUser = getUser(principal);
+        EntityUtil.update(user, oldUser);
         repositoryU.save(user);
         return new RedirectView("/");
     }
@@ -63,17 +63,17 @@ public class UserController extends GenericController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String currentUserName(Model model, Principal principal) {
-        User user = repositoryU.findById(principal.getName()).get();
+        User user = getUser(principal);
         FormUtil.addForm(model, user, "/user/save", "Profile");
         return "userProfile";
     }
 
     @RequestMapping(value = "/house", method = RequestMethod.GET)
-    public RedirectView house(Model model, Principal principal) {
-        User user = repositoryU.findById(principal.getName()).get();
+    public RedirectView house(Principal principal) {
+        User user = getUser(principal);
         String houseName = user.getHouseName();
         if (houseName != null && !houseName.isEmpty())
-            return new RedirectView("/house/" + houseName);
+            return new RedirectView("/house/view");
         else
             return new RedirectView("/house/register");
     }

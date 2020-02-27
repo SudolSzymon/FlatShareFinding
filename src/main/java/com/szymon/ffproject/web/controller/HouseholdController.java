@@ -48,18 +48,19 @@ public class HouseholdController extends GenericController {
     @GetMapping("/add")
     public String add(Model model, Household house) {
         FormUtil.addForm(model, house, "/house/create", "Create Household");
-        return "addHousehold";
+        return "add";
     }
 
     @PostMapping(value = "/create")
     public RedirectView create(@ModelAttribute Household household, Principal principal) {
         household.encrypt(passwordEncoder);
         household.setMembers(Sets.newHashSet(principal.getName()));
-        User user = repositoryU.findById(principal.getName()).get();
+        User user = getUser(principal);
+        user.getRoles().add("HAdmin");
         user.setHouseName(household.getName());
         repositoryU.save(user);
         repositoryH.save(household);
-        return new RedirectView("/house/" + household.getName());
+        return new RedirectView("/house/view");
     }
 
 
@@ -72,12 +73,11 @@ public class HouseholdController extends GenericController {
 
     @PostMapping(value = "/register")
     public RedirectView register(@ModelAttribute HouseholdSignUpData householdSignUpData, Principal principal) {
-        Household house = repositoryH.findById(householdSignUpData.name).get();
-        User user = repositoryU.findById(principal.getName()).get();
+        Household house = getHousehold(principal);
+        User user = getUser(principal);
         if (passwordEncoder.matches(householdSignUpData.getPass(), house.getPassword())) {
             Set<String> members = house.getMembers();
             members.add(principal.getName());
-            house.setMembers(members);
             repositoryH.save(house);
             user.setHouseName(house.getName());
             repositoryU.save(user);

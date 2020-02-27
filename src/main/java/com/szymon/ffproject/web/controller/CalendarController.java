@@ -14,16 +14,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -47,45 +50,49 @@ public class CalendarController extends GenericController {
     @GetMapping("/{username}")
     public String view(Model model, @PathVariable String username) {
         Optional<User> user = repositoryU.findById(username);
-       if (user.isPresent()) {
-           CalendarConfig config = configProvider.getObject();
-           config.setEvents(user.get().getCalendar().getEvents());
-           model.addAttribute("calendarConfig", jsonConverter.toJson(config));
-       } else throw badRequestException("user  does not  exist");
+        if (user.isPresent()) {
+            CalendarConfig config = configProvider.getObject();
+            config.setEvents(user.get().getCalendar().getEvents());
+            model.addAttribute("calendarConfig", jsonConverter.toJson(config));
+        } else throw badRequestException("user  does not  exist");
         return "calendar";
     }
 
-    @GetMapping("/full/{house}")
-    public String viewAll(Model model, @PathVariable String house) {
-        Optional<Household> household = repositoryH.findById(house);
-        if (household.isPresent()) {
-            CalendarConfig config = configProvider.getObject();
-            List<Event> eventList = new LinkedList<>();
-            household.get().getMembers().stream().map(u -> repositoryU.findById(u).get().getCalendar().getEvents())
-                .forEach(eventList::addAll);
-            eventList = eventList.stream().distinct().collect(Collectors.toList());
-            config.setEvents(eventList);
-            model.addAttribute("calendarConfig", jsonConverter.toJson(config));
-        } else throw badRequestException("household  does not  exist");
+    @GetMapping("/full")
+    public String viewAll(Model model, Principal principal) {
+        Household household = getHousehold(principal);
+        CalendarConfig config = configProvider.getObject();
+        List<Event> eventList = new LinkedList<>();
+        household.getMembers().stream().map(u -> repositoryU.findById(u).get().getCalendar().getEvents())
+            .forEach(eventList::addAll);
+        eventList = eventList.stream().distinct().collect(Collectors.toList());
+        config.setEvents(eventList);
+        model.addAttribute("calendarConfig", jsonConverter.toJson(config));
         return "calendar";
     }
 
 
     @GetMapping("/event/add")
-    public String add(Model model, Event event) {
+    public String add(Model model) {
+        Event event = getAttribute(model, "object", Event.class);
         FormUtil.addForm(model, event, "/calendar/event/create", "Create Event");
         return "add";
     }
 
     @PostMapping(value = "/event/create")
-    public RedirectView create(Principal principal, @ModelAttribute Event event) {
-        User mainUser = repositoryU.findById(principal.getName()).get();
-        Household household = repositoryH.findById(mainUser.getHouseName()).get();
+    public String create(Principal principal, @Valid @ModelAttribute("object") Event object,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            storeBindingResult(object, bindingResult, redirectAttributes);
+            return "redirect:/calendar/event/add";
+        }
+        Household household = getHousehold(principal);
         Set<String> members = household.getMembers();
-        event.getParticipants().stream().filter(members::contains).map(p -> repositoryU.findById(p).get()).forEach(user -> {
-            user.getCalendar().addEvent(event);
+        object.getParticipants().stream().filter(members::contains).map(p -> repositoryU.findById(p).get()).forEach(user -> {
+            user.getCalendar().addEvent(object);
             repositoryU.save(user);
         });
-        return new RedirectView("/house/" + household.getName());
+        return "redirect:/user/house";
     }
 }

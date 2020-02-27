@@ -2,26 +2,34 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.database.converter.DateTimeConverter;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @DynamoDBDocument
 public class Event {
 
+    @NotBlank
     private String title;
+    @Future
     @InputType(type = "dateTime")
     private LocalDateTime start;
+    @Future
     @InputType(type = "dateTime")
     private LocalDateTime end;
     @FormTransient
-    private boolean allDay = false;
-    private transient List<String> participants;
-
+    private final boolean allDay = false;
+    @Size(min = 1, max = 1000)
+    private transient Set<String> participants;
 
 
     @DynamoDBAttribute
@@ -53,11 +61,12 @@ public class Event {
         this.end = end;
     }
 
-    public List<String> getParticipants() {
+    @DynamoDBTyped(DynamoDBAttributeType.SS)
+    public Set<String> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(Set<String> participants) {
         this.participants = participants;
     }
 }

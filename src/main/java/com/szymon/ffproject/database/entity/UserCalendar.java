@@ -11,11 +11,13 @@ import java.util.List;
 @DynamoDBDocument
 public class UserCalendar {
 
-    private List<Event> events = new LinkedList<>();
+    private List<Event> events;
 
 
     @DynamoDBTyped(DynamoDBAttributeType.L)
     public List<Event> getEvents() {
+        if (events == null)
+            events = new LinkedList<>();
         return events;
     }
 
@@ -24,6 +26,6 @@ public class UserCalendar {
     }
 
     public void addEvent(Event event) {
-        events.add(event);
+        getEvents().add(event);
     }
 }

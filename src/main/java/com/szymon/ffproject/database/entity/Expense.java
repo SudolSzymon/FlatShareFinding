@@ -2,23 +2,23 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
-import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.database.converter.DateTimeConverter;
-import java.time.LocalDateTime;
-import java.util.List;
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 
 @DynamoDBDocument
 public class Expense {
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String borrower;
 
+    @NotBlank
     private String lender;
 
+    @Positive
     private  double amount;
 
 

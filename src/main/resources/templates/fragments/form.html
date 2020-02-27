@@ -1,28 +1,31 @@
 <div th:fragment="form"  xmlns:th="http://www.w3.org/1999/xhtml">
   <h4 class="card-title mt-3 text-center" th:text="${formName}">Create Account</h4>
 
-  <form th:action="${formUrl}" th:object="${object}" method="post">
+  <form action="#" th:action="${formUrl}" th:object="${object}" method="post">
     <div class="form-group input-group" th:each="input : ${inputs}">
       <div class="input-group-prepend">
         <span class="input-group-text" th:text="${input.name}"></span>
       </div>
-      <label th:if="${input.type} == 'text'">
+      <span th:if="${input.type} == 'text'">
         <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=text
                th:field="*{__${input.name}__}">
-      </label>
-      <label th:if="${input.type} == 'pass'">
+      </span>
+      <span th:if="${input.type} == 'pass'">
         <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=password
                th:field="*{__${input.name}__}">
-      </label>
-      <label th:if="${input.type} == 'dateTime'">
+      </span>
+      <span th:if="${input.type} == 'dateTime'">
         <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=datetime-local
                th:field="*{__${input.name}__}">
-      </label>
-      <label th:if="${input.type} == 'valueSelect'">
+      </span>
+      <span th:if="${input.type} == 'valueSelect'">
         <select th:name="${input.name}" class="form-control form-select-button" th:field="*{__${input.name}__}">
           <option th:value="${option}" th:each=" option: ${input.options}" th:text="${option}">Volvo</option>
         </select>
-      </label>
+      </span>
+      <span th:if="${#fields.hasErrors('__${input.name}__')}" th:errors="*{__${input.name}__}">
+      error
+      </span>
 
     </div> <!-- form-group// -->
 

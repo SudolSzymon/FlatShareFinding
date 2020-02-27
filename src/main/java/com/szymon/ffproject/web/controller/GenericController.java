@@ -6,9 +6,14 @@ import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
 import java.security.Principal;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public abstract class GenericController {
 
@@ -39,5 +44,26 @@ public abstract class GenericController {
         if (user.isPresent())
             return user.get();
         throw badRequestException("User not found");
+    }
+
+    public <T> T getAttribute(Model model, String name, Class<T> type) {
+        T expense;
+        if (model.containsAttribute(name))
+            expense = (T) model.getAttribute(name);
+        else {
+            try {
+                expense = type.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                return null;
+            }
+        }
+        return expense;
+    }
+
+    public void storeBindingResult(
+        @ModelAttribute("object") @Valid Object object,
+        BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.object", bindingResult);
+        redirectAttributes.addFlashAttribute("object", object);
     }
 }

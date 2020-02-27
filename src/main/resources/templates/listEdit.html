@@ -20,7 +20,7 @@
       <td><span th:text="${entry.name}"> name </span></td>
       <td><span th:text="${entry.count}"> name </span></td>
       <td>
-        <form th:action="@{'/shop/delete/'+ ${listName} + '/' + ${entryStat.index}}" method="post" >
+        <form th:action="@{'/shop/delete/'+ ${listName} + '/' + ${entryStat.index}}" method="post">
           <input type="submit" value="Delete"/>
         </form>
       </td>
@@ -30,6 +30,8 @@
         <td><input type="text" th:field="*{name}"/></td>
         <td><input type="number" th:field="*{count}"/></td>
         <td><input type="submit" value="Add"/></td>
+        <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
+        <td th:if="${#fields.hasErrors('count')}" th:errors="*{count}"></td>
       </form>
     </tr>
     </tbody>

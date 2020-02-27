@@ -9,6 +9,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,17 +42,9 @@ public class User {
 
     @DynamoDBTyped(DynamoDBAttributeType.L)
     public List<String> getRoles() {
+        if(roles == null)
+            roles = new ArrayList<>();
         return roles;
-    }
-
-    @DynamoDBIgnore
-    public String[] getRolesAsArray() {
-        return roles.toArray(new String[0]);
-    }
-
-    public User setRoles(String... roles) {
-        this.roles = Arrays.asList(roles);
-        return this;
     }
 
     public User setRoles(List<String> roles) {
@@ -77,6 +70,8 @@ public class User {
 
     @DynamoDBAttribute
     public UserCalendar getCalendar() {
+        if(calendar == null)
+            calendar = new UserCalendar();
         return calendar;
     }
 
