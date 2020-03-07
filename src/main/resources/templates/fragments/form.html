@@ -1,36 +1,54 @@
-<div th:fragment="form"  xmlns:th="http://www.w3.org/1999/xhtml">
-  <h4 class="card-title mt-3 text-center" th:text="${formName}">Create Account</h4>
+<div th:fragment="form" xmlns:th="http://www.w3.org/1999/xhtml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-  <form action="#" th:action="${formUrl}" th:object="${object}" method="post">
-    <div class="form-group input-group" th:each="input : ${inputs}">
-      <div class="input-group-prepend">
-        <span class="input-group-text" th:text="${input.name}"></span>
+
+  <div class="card">
+    <h4 class="card-header-pills mt-3 text-center" th:text="${formName}">Title</h4>
+
+
+    <form class="card-body" action="#" th:action="${formUrl}" th:object="${object}" method="post">
+      <div class="form-group" th:each="input : ${inputs}">
+        <label class="w-25 text-wrap" th:text="${input.display}">display</label>
+        <label th:if="${input.type} == 'text'" class="w-75">
+          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
+                 type=text
+                 th:field="*{__${input.name}__}">
+        </label>
+        <label th:if="${input.type} == 'number'" class="w-75">
+          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
+                 type=number
+                 th:field="*{__${input.name}__}">
+        </label>
+        <label th:if="${input.type} == 'pass'" class="w-75">
+          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
+                 type=password
+                 th:field="*{__${input.name}__}">
+        </label>
+
+        <label th:if="${input.type} == 'dateTime'" class="w-75">
+          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
+                 type=datetime-local
+                 th:field="*{__${input.name}__}">
+        </label>
+        <label th:if="${input.type} == 'valueSelect'" class="w-75">
+          <select  multiple th:name="${input.name}" class="selectpicker "
+                  data-live-search="true" th:field="*{__${input.name}__}">
+            <option th:value="${option}" th:each=" option: ${input.options}" th:text="${option}">Option</option>
+          </select>
+        </label>
+        <span class="input-group-append" th:if="${#fields.hasErrors('__${input.name}__')}"
+              th:errors="*{__${input.name}__}">error</span>
       </div>
-      <span th:if="${input.type} == 'text'">
-        <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=text
-               th:field="*{__${input.name}__}">
-      </span>
-      <span th:if="${input.type} == 'pass'">
-        <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=password
-               th:field="*{__${input.name}__}">
-      </span>
-      <span th:if="${input.type} == 'dateTime'">
-        <input th:name="${input.name}" class="form-control" th:placeholder="${input.name}" type=datetime-local
-               th:field="*{__${input.name}__}">
-      </span>
-      <span th:if="${input.type} == 'valueSelect'">
-        <select th:name="${input.name}" class="form-control form-select-button" th:field="*{__${input.name}__}">
-          <option th:value="${option}" th:each=" option: ${input.options}" th:text="${option}">Volvo</option>
-        </select>
-      </span>
-      <span th:if="${#fields.hasErrors('__${input.name}__')}" th:errors="*{__${input.name}__}">
-      error
-      </span>
-
-    </div> <!-- form-group// -->
-
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-block" th:text="${formName}"> Create Account</button>
-    </div> <!-- form-group// -->
-  </form>
+      <div class="text-center">
+      <button type="submit" class="btn btn-primary w-25 " >Submit</button>
+      </div>
+    </form>
+  </div>
 </div>
+
+
+
+

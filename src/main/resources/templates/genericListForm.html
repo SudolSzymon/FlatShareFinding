@@ -1,0 +1,13 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/main_layout}" lang="en-GB">
+
+
+<body>
+<div layout:fragment="content" class="container">
+  <h1 th:text="${listName}">title</h1>
+
+  <div th:replace="fragments/list :: list"></div>
+  <div th:replace="fragments/form :: form"></div>
+</div>
+</body>
+</html>

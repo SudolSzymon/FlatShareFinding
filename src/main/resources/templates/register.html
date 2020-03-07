@@ -1,41 +1,31 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/main_layout}" lang="en-GB">
 <head>
   <title>Register</title>
-  <!------ Include the above in your HEAD tag ---------->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 </head>
 
 <body>
 <div layout:fragment="content" class="container">
-  <div class="card bg-light">
-    <article class="card-body mx-auto" style="max-width: 400px;">
-      <h4 class="card-title mt-3 text-center">Create Account</h4>
-      <p class="text-center">Get started with your free account</p>
+  <div class="card w-50">
+    <h4 class="card-header-pills mt-3 text-center">Register</h4>
 
-      <form action="#" th:action="@{/user/create}" th:object="${user}" method="post">
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-          </div>
-          <label>
-            <input name="user" class="form-control" placeholder="Full name" type="text" th:field="*{name}">
-          </label>
-        </div> <!-- form-group// -->
+    <p class="text-center">Get started with your free account</p>
 
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-          </div>
-          <label>
-            <input class="form-control" name="password" placeholder="Create password" type="password" th:field="*{password}">
-          </label>
-        </div> <!-- form-group// -->
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-block"> Create Account</button>
-        </div> <!-- form-group// -->
-        <p class="text-center">Have an account? <a href="/login">Log In</a></p>
-      </form>
-    </article>
+    <form class="form-group card-body text-center align-items-center" th:action="@{/user/create}" th:object="${user}"
+          method="post">
+      <div class="input-group align-content-center justify-content-center"><label> User Name : <input th:field="*{name}"
+                                                                                                      class="form-control"
+                                                                                                      type="text"
+                                                                                                      name="username"/> </label>
+      </div>
+      <div class="input-group align-content-center justify-content-center"><label> Password: <input th:field="*{password}"
+                                                                                                    class="form-control"
+                                                                                                    type="password"
+                                                                                                    name="password"/> </label>
+      </div>
+      <input class="btn btn-primary btn-group" type="submit" value="Register"/>
+    </form>
+
+    <p class="text-center">Have an account? <a href="/user/login">Log In</a></p>
   </div>
 </div>
 </body>

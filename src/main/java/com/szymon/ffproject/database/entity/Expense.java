@@ -2,6 +2,7 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import com.szymon.ffproject.web.util.annotation.InputType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -13,9 +14,11 @@ public class Expense {
     private String title;
 
     @NotBlank
+    @InputType(type = "valueSelect")
     private String borrower;
 
     @NotBlank
+    @InputType(type = "valueSelect")
     private String lender;
 
     @Positive

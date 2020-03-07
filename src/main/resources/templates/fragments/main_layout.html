@@ -6,15 +6,28 @@
   <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-
+  <title>Roomie</title>
 </head>
+
+<style>
+  .sidePanel {
+    height: 100%;
+    width: 10%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    padding-top: 100px;
+  }
+</style>
 <body>
-<!--header.html  that's here  -->
 <div th:replace="fragments/header :: header"></div>
-<div class="jumbotron">
+<div class="sidePanel">
+  <div layout:fragment="sidePanel"></div>
+</div>
+<div class="jumbotron min-vh-100">
   <div layout:fragment="content"></div>
 </div>
-<!--footer.html  that's here  -->
 <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

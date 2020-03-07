@@ -2,11 +2,11 @@ package com.szymon.ffproject.web.controller;
 
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.ShopItem;
+import com.szymon.ffproject.database.entity.ShopList;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
-import com.szymon.ffproject.web.util.StringWrapper;
+import com.szymon.ffproject.web.util.FieldUtil;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -36,54 +35,62 @@ public class ShoppingListController extends GenericController {
     @GetMapping("/view/all")
     public String view(Model model, Principal principal) {
         Household household = getHousehold(principal);
-        model.addAttribute("map", household.getLists());
-        model.addAttribute("houseName", household.getName());
-        model.addAttribute("stringWrap", new StringWrapper());
-        return "shopLists";
+        FieldUtil.addList(model, household.getLists().values(), "Shopping Lists", "../delete/id", "../edit/id");
+        FieldUtil.addForm(model, getAttribute(model, "object", ShopList.class), "../create", "New List");
+        return "genericListFlatFormOnSide";
     }
 
     @PostMapping("/create")
-    public RedirectView create(Principal principal, @ModelAttribute StringWrapper stringWrapper) {
+    public RedirectView create(Principal principal, @ModelAttribute("object") ShopList list) {
         Household household = getHousehold(principal);
-        Map<String, List<ShopItem>> shopLists = household.getLists();
-        shopLists.put(stringWrapper.getValue(), new ArrayList<>());
+        household.addList(list);
         repositoryH.save(household);
-        return new RedirectView("/shop/edit/" + stringWrapper.getValue());
+        return new RedirectView("/shop/edit/" + list.getName());
     }
 
-    @GetMapping("/edit/{name}")
+    @RequestMapping("/edit/{name}")
     public String edit(Model model, @PathVariable String name, Principal principal) {
         Household household = getHousehold(principal);
-        Map<String, List<ShopItem>> shopLists = household.getLists();
-        model.addAttribute("listName", name);
-        model.addAttribute("list", shopLists.get(name));
-        model.addAttribute("item", new ShopItem());
-        return "listEdit";
+        FieldUtil.addList(model, household.getList(name).getItemList(), name, "../delete/item/" + name, null);
+        FieldUtil.addForm(model, new ShopItem(), "/shop/add/item/" + name, "New Item");
+        return "genericListFlatFormOnSide";
     }
 
-    @GetMapping("/delete/{name}")
+    @RequestMapping("/edit/id/{index}")
+    public RedirectView edit(@PathVariable Integer index, Principal principal) {
+        Household household = getHousehold(principal);
+        String name = household.getListByIndex(index).getName();
+        return new RedirectView("/shop/edit/" + name);
+    }
+
+    @RequestMapping("/delete/{name}")
     public RedirectView delete(@PathVariable String name, Principal principal) {
         Household household = getHousehold(principal);
-        Map<String, List<ShopItem>> shopLists = household.getLists();
-        shopLists.remove(name);
+        household.getLists().remove(name);
         repositoryH.save(household);
         return new RedirectView("/shop/view/all");
     }
 
-    @PostMapping("/addItem/{listName}")
+    @RequestMapping("/delete/id/{index}")
+    public RedirectView delete(@PathVariable Integer index, Principal principal) {
+        Household household = getHousehold(principal);
+        String name = household.getListByIndex(index).getName();
+        return new RedirectView("/shop/delete/" + name);
+    }
+
+
+    @PostMapping("/add/item/{listName}")
     public RedirectView addItem(@PathVariable String listName, Principal principal, @ModelAttribute ShopItem item) {
         Household household = getHousehold(principal);
-        Map<String, List<ShopItem>> shopLists = household.getLists();
-        shopLists.get(listName).add(item);
+        household.getList(listName).getItemList().add(item);
         repositoryH.save(household);
         return new RedirectView("/shop/edit/" + listName);
     }
 
-    @PostMapping("/delete/{name}/{index}")
+    @RequestMapping("/delete/item/{name}/{index}")
     public RedirectView addItem(@PathVariable String name, Principal principal, @PathVariable int index) {
         Household household = getHousehold(principal);
-        Map<String, List<ShopItem>> shopLists = household.getLists();
-        shopLists.get(name).remove(index);
+        household.getList(name).getItemList().remove(index);
         repositoryH.save(household);
         return new RedirectView("/shop/edit/" + name);
     }

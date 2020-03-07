@@ -5,11 +5,9 @@ import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
-import com.szymon.ffproject.web.util.FormUtil;
+import com.szymon.ffproject.web.util.FieldUtil;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,8 +44,8 @@ public class HouseholdController extends GenericController {
 
     @GetMapping("/add")
     public String add(Model model, Household house) {
-        FormUtil.addForm(model, house, "/house/create", "Create Household");
-        return "add";
+        FieldUtil.addForm(model, house, "/house/create", "Create Household");
+        return "genericForm";
     }
 
     @PostMapping(value = "/create")
@@ -66,14 +63,14 @@ public class HouseholdController extends GenericController {
 
     @GetMapping(value = "/register")
     public String prepareRegister(Model model, HouseholdSignUpData data) {
-        FormUtil.addForm(model, data, "/house/register", "Register to HouseHold");
-        return "addHousehold";
+        FieldUtil.addForm(model, data, "/house/register", "Register to HouseHold");
+        return "genericForm";
     }
 
 
     @PostMapping(value = "/register")
     public RedirectView register(@ModelAttribute HouseholdSignUpData householdSignUpData, Principal principal) {
-        Household house = getHousehold(principal);
+        Household house = getHousehold(householdSignUpData.name);
         User user = getUser(principal);
         if (passwordEncoder.matches(householdSignUpData.getPass(), house.getPassword())) {
             Set<String> members = house.getMembers();
@@ -81,7 +78,7 @@ public class HouseholdController extends GenericController {
             repositoryH.save(house);
             user.setHouseName(house.getName());
             repositoryU.save(user);
-            return new RedirectView("/house/" + house.getName());
+            return new RedirectView("/house/view");
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Wrong household password or name");
 
     }

@@ -6,4 +6,5 @@
   <bean id="userDetailsService" class="com.szymon.ffproject.web.config.UserDetailsProvider"/>
   <bean id="calendarConfig" class="com.szymon.ffproject.web.config.CalendarConfig" scope="prototype" />
   <bean id="secDialect" class="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect" />
+  <bean id="dataCache" class="com.szymon.ffproject.database.repository.DataCache" />
 </beans>

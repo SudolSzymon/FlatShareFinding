@@ -3,32 +3,63 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
+import com.szymon.ffproject.web.util.annotation.DisplayAs;
 import com.szymon.ffproject.web.util.annotation.FormTransient;
+import com.szymon.ffproject.web.util.annotation.InputType;
+import com.szymon.ffproject.web.util.annotation.Private;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @DynamoDBTable(tableName = "Users")
 public class User {
 
+    @NotBlank
     @Unmodifiable
     private String name;
     @FormTransient
+    @Private
     private List<String> roles;
     @FormTransient
+    @Private
     private String password;
     @FormTransient
+    @Private
     private UserCalendar calendar;
     @Unmodifiable
+    @Private
     private String houseName;
     private String description;
+    @Positive
+    @Max(100000)
+    @DisplayAs(display = "Monthly Budget")
+    @InputType(type = "number")
+    private Double monthlyBudget;
+    @Positive
+    @Max(1000)
+    @InputType(type = "number")
+    @DisplayAs(display = "Distance to center in minutes")
+    private Integer distanceToCenter;
+    @Size(max = 10)
+    @InputType(type = "valueSelect")
+    @DisplayAs(display = "Expected amenities")
+    private List<String> amenities;
+    @Size(max = 10)
+    @InputType(type = "valueSelect")
+    private List<String> houseTypes;
+    @Positive
+    @DisplayAs(display = "Flat size in meters")
+    @InputType(type = "number")
+    private Integer houseSize;
 
     @DynamoDBHashKey
     public String getName() {
@@ -42,7 +73,7 @@ public class User {
 
     @DynamoDBTyped(DynamoDBAttributeType.L)
     public List<String> getRoles() {
-        if(roles == null)
+        if (roles == null)
             roles = new ArrayList<>();
         return roles;
     }
@@ -70,7 +101,7 @@ public class User {
 
     @DynamoDBAttribute
     public UserCalendar getCalendar() {
-        if(calendar == null)
+        if (calendar == null)
             calendar = new UserCalendar();
         return calendar;
     }
@@ -96,5 +127,54 @@ public class User {
 
     public void setHouseName(String houseName) {
         this.houseName = houseName;
+    }
+
+    @DynamoDBAttribute
+    public Double getMonthlyBudget() {
+        return monthlyBudget;
+    }
+
+    public void setMonthlyBudget(Double monthlyBudget) {
+        this.monthlyBudget = monthlyBudget;
+    }
+
+    @DynamoDBAttribute
+    public Integer getDistanceToCenter() {
+        return distanceToCenter;
+    }
+
+    public void setDistanceToCenter(Integer distanceToCenter) {
+        this.distanceToCenter = distanceToCenter;
+    }
+
+    @DynamoDBTyped(DynamoDBAttributeType.L)
+    public List<String> getAmenities() {
+        if (amenities == null)
+            amenities = new ArrayList<>();
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities;
+    }
+
+    @DynamoDBAttribute
+    public Integer getHouseSize() {
+        return houseSize;
+    }
+
+    public void setHouseSize(Integer houseSize) {
+        this.houseSize = houseSize;
+    }
+
+    @DynamoDBTyped(DynamoDBAttributeType.L)
+    public List<String> getHouseTypes() {
+        if (this.houseTypes == null)
+            houseTypes = new ArrayList<>();
+        return houseTypes;
+    }
+
+    public void setHouseTypes(List<String> houseTypes) {
+        this.houseTypes = houseTypes;
     }
 }

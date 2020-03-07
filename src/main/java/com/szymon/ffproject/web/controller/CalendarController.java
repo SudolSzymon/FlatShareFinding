@@ -7,7 +7,7 @@ import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
 import com.szymon.ffproject.web.config.CalendarConfig;
-import com.szymon.ffproject.web.util.FormUtil;
+import com.szymon.ffproject.web.util.FieldUtil;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping(value = "/calendar")
@@ -75,8 +74,8 @@ public class CalendarController extends GenericController {
     @GetMapping("/event/add")
     public String add(Model model) {
         Event event = getAttribute(model, "object", Event.class);
-        FormUtil.addForm(model, event, "/calendar/event/create", "Create Event");
-        return "add";
+        FieldUtil.addForm(model, event, "/calendar/event/create", "Create Event");
+        return "genericForm";
     }
 
     @PostMapping(value = "/event/create")
