@@ -1,8 +1,5 @@
 package com.szymon.ffproject.web.config;
 
-import com.amazonaws.services.dynamodbv2.xspec.S;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -10,43 +7,32 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.szymon.ffproject.database.entity.Event;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.context.annotation.Bean;
 
 public class CalendarConfig {
 
-    private String defaultView;
-    private Map<String, String> header;
-    private LocalDate defaultDate;
-    private boolean navLinks;
-    private boolean editable;
-    private boolean eventLimit;
-    private boolean displayEventTime;
-    private List<Event> events;
-   // private Map<String, Map<String, Object>> views;
+    private final List<String> plugins;
+    private final String defaultView;
+    private final Map<String, String> header;
+    private final boolean eventLimit;
+    private Set<Event> events;
 
     public CalendarConfig() {
-        defaultView = "agendaWeek";
+        plugins = Arrays.asList("dayGrid", "timeGrid");
+        defaultView = "timeGridWeek";
         header = new LinkedHashMap<>();
         header.put("left", "prev,next,today");
         header.put("center", "title");
-        header.put("right", "month,agendaWeek");
-        this.navLinks = true;
-        this.eventLimit = true;
-    }
-
-    private LinkedHashMap<String, Object> getTimeFormat() {
-        LinkedHashMap<String, Object> eventTimeFormat = new LinkedHashMap<>();
-        eventTimeFormat.put("hour", "2-digit");
-        eventTimeFormat.put("minute", "2-digit");
-        eventTimeFormat.put("hour12", false);
-        return eventTimeFormat;
+        header.put("right", "dayGridMonth,timeGridWeek,timeGridDay");
+        eventLimit = true;
     }
 
     @Bean
@@ -54,7 +40,7 @@ public class CalendarConfig {
         return new GsonBuilder().setPrettyPrinting().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create();
     }
 
-    public void setEvents(List<Event> eventList) {
+    public void setEvents(Set<Event> eventList) {
         this.events = eventList;
     }
 

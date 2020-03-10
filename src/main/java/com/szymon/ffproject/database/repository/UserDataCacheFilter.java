@@ -1,8 +1,10 @@
 package com.szymon.ffproject.database.repository;
 
+import com.google.gson.Gson;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -94,4 +96,39 @@ public class UserDataCacheFilter implements DataCacheFilter<User> {
     public void setMaxBudget(Double maxBudget) {
         this.maxBudget = maxBudget;
     }
+
+    @Override
+    public String toString() {
+       return new Gson().toJson(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this)
+            return true;
+        if(!(obj instanceof UserDataCacheFilter))
+            return false;
+        UserDataCacheFilter fObj = (UserDataCacheFilter) obj;
+        if (!Objects.equals(this.amenities,fObj.amenities))
+            return false;
+        if (!Objects.equals(this.minBudget,fObj.minBudget))
+            return false;
+        if (!Objects.equals(this.maxBudget,fObj.maxBudget))
+            return false;
+        if (!Objects.equals(this.distanceMin,fObj.distanceMin))
+            return false;
+        if (!Objects.equals(this.distanceMax,fObj.distanceMax))
+            return false;
+        if (!Objects.equals(this.flatSizeMax,fObj.flatSizeMax))
+            return false;
+        if (!Objects.equals(this.flatSizeMin,fObj.flatSizeMin))
+            return false;
+        return Objects.equals(this.houseTypes, fObj.houseTypes);
+    }
 }
+

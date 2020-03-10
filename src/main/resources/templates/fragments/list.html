@@ -15,7 +15,12 @@
             <span th:text="${#conversions.convert(listing,'String')}"></span>
           </li>
         </ul>
-        <span th:if ="${!(listItem.__${ent.key}__ instanceof T(java.util.List))}" th:text="${listItem.__${ent.key}__}">elem</span>
+        <ul th:if="${listItem.__${ent.key}__ instanceof T(java.util.Set)}">
+          <li th:each="listing: ${listItem.__${ent.key}__}">
+            <span th:text="${#conversions.convert(listing,'String')}"></span>
+          </li>
+        </ul>
+        <span th:if ="${!(listItem.__${ent.key}__ instanceof T(java.util.List)) && !(listItem.__${ent.key}__ instanceof T(java.util.Set))}" th:text="${listItem.__${ent.key}__}">elem</span>
       </td>
       <td><a th:if="${delUrl}" th:href="${delUrl} + '/' + ${listItemStat.index}">Delete</a></td>
       <td><a th:if="${editUrl}" th:href="${editUrl} + '/' + ${listItemStat.index}">Edit</a></td>

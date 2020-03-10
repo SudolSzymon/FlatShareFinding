@@ -37,7 +37,7 @@ public class ShoppingListController extends GenericController {
         Household household = getHousehold(principal);
         FieldUtil.addList(model, household.getLists().values(), "Shopping Lists", "../delete/id", "../edit/id");
         FieldUtil.addForm(model, getAttribute(model, "object", ShopList.class), "../create", "New List");
-        return "genericListFlatFormOnSide";
+        return "generic/genericListFormOnSide";
     }
 
     @PostMapping("/create")
@@ -53,7 +53,7 @@ public class ShoppingListController extends GenericController {
         Household household = getHousehold(principal);
         FieldUtil.addList(model, household.getList(name).getItemList(), name, "../delete/item/" + name, null);
         FieldUtil.addForm(model, new ShopItem(), "/shop/add/item/" + name, "New Item");
-        return "genericListFlatFormOnSide";
+        return "generic/genericListFormOnSide";
     }
 
     @RequestMapping("/edit/id/{index}")

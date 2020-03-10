@@ -5,12 +5,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
-import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.entity.Household;
+import com.szymon.ffproject.database.entity.User;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-//java -D"java.library.path=./DynamoDBLocal_lib" -jar DynamoDBLocal.jar
 @Component
 public class DBInitializer {
 

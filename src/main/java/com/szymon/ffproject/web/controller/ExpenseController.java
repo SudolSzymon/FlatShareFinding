@@ -38,7 +38,7 @@ public class ExpenseController extends GenericController {
         values.put("lender", house.getMembers());
         values.put("borrower", house.getMembers());
         FieldUtil.addForm(model, expense, "/expense/create", "New Expense", values);
-        return "genericListFlatFormOnSide";
+        return "generic/genericListFormOnSide";
     }
 
 
@@ -65,10 +65,11 @@ public class ExpenseController extends GenericController {
     public String delete(Principal principal, @PathVariable Integer index) {
         Household household = getHousehold(principal);
         Expense expense = household.getExpenses().get(index);
-        if (false  && expense.getLender().equals(principal.getName()))
+        if (expense.getLender().equals(principal.getName()))
             household.getExpenses().remove(expense);
         else
             throw unAuthorisedException("user not  authorised to delete this  expense");
+        repositoryH.save(household);
 
         return "redirect:/expense/view";
     }

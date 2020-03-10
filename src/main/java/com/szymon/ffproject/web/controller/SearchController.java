@@ -27,12 +27,12 @@ public class SearchController extends GenericController {
 
     @RequestMapping()
     public  String test(Model model , @ModelAttribute UserDataCacheFilter filter){
-        List<User> res = dataCache.findFilteredUsersList(filter);
+        List<User> res = dataCache.getUsers(filter);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("amenities", Amenity.stringValues());
         values.put("houseTypes", HouseType.stringValues());
         FieldUtil.addForm(model, filter, "/search", "Search", values);
         FieldUtil.addList(model, res,"Test",null,null);
-        return "genericListFlatFormOnSide";
+        return "generic/genericListFormOnSide";
     }
 }

@@ -1,20 +1,12 @@
 <header th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
-  <!-- Static navbar -->
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="#">
         "Roomie"
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-              aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item" sec:authorize="isAuthenticated()">
-            <a class="nav-link" th:href="@{|~/calendar/${#authentication.name}|}">Calendar</a>
-          </li>
           <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" href="javascript: document.logoutForm.submit()" > Logout</a>
             <form name="logoutForm" th:action="@{/user/logout}" method="post" th:hidden="true">
@@ -28,16 +20,22 @@
             <a class="nav-link" href="/user/login">Login</a>
           </li>
           <li class="nav-item" sec:authorize="isAuthenticated()">
-            <a class="nav-link" href="/user/house">House</a>
-          </li>
-          <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" href="/shop/view/all">Shop Lists</a>
           </li>
           <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" href="/expense/view">Expenses</a>
           </li>
           <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/calendar/view">Calendar</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/calendar/event/manage">Events</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" href="/user/profile">Profile</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/user/house">House</a>
           </li>
           <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" href="/search">Find roomie</a>

@@ -12,22 +12,21 @@
 <style>
   .sidePanel {
     height: 100%;
-    width: 10%;
+    width: 300px;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
-    padding-top: 100px;
+    padding-top:100px;
   }
 </style>
 <body>
 <div th:replace="fragments/header :: header"></div>
-<div class="sidePanel">
+<div class="sidePanel bg-dark">
   <div layout:fragment="sidePanel"></div>
 </div>
-<div class="jumbotron min-vh-100">
+<div class="jumbotron min-vh-100" style="margin-left: 300px">
   <div layout:fragment="content"></div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -8,43 +8,32 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.jws.soap.SOAPBinding.Use;
 
 public class DataCache {
 
-    public static final String ALL_USERS = "ALL_USERS";
-
-    private final LoadingCache<String, Iterable<User>> userCache;
+    private final LoadingCache<DataCacheFilter<User>, List<User>> userCache;
 
 
     public DataCache(UserRepository userRepository) {
         userCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(Duration.ofMillis(10))
+            .expireAfterWrite(Duration.ofMinutes(10))
             .build(
-                new CacheLoader<String, Iterable<User>>() {
+                new CacheLoader<DataCacheFilter<User>, List<User>>() {
                     @Override
-                    public Iterable<User> load(String key) {
-                        if (key.equals(ALL_USERS))
-                            return userRepository.findAll();
-                        return Collections.emptyList();
+                    public List<User> load(DataCacheFilter<User> filter) {
+                        return filter.filter(userRepository.findAll());
                     }
                 });
     }
 
-    public Iterable<User> getUsers(String key) {
+    public List<User> getUsers(DataCacheFilter<User> filter) {
         try {
-            return userCache.get(key);
+            return userCache.get(filter);
         } catch (ExecutionException e) {
             return Collections.emptyList();
         }
     }
-
-    public List<User> findFilteredUsersList(DataCacheFilter<User> filter) {
-        Iterable<User> users = getUsers(DataCache.ALL_USERS);
-        return filter.filter(users);
-
-    }
-
-
 
 }

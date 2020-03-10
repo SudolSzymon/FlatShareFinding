@@ -1,6 +1,7 @@
 package com.szymon.ffproject.web.controller;
 
 import com.google.gson.Gson;
+import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -53,11 +53,13 @@ public class UserController extends GenericController {
     }
 
     @PostMapping(value = "/create")
-    public RedirectView create(@ModelAttribute User user) {
+    public String create(@ModelAttribute User user) {
         user.encrypt(passwordEncoder).setRoles(Collections.singletonList("user"));
+        if(repositoryU.existsById(user.getName()))
+            return "duplicate";
         repositoryU.save(user);
         logger.info("Created user: " + new Gson().toJson(user));
-        return new RedirectView("/");
+        return "redirect:/";
     }
 
     @PostMapping(value = "/save")
@@ -84,7 +86,7 @@ public class UserController extends GenericController {
         values.put("amenities", Arrays.stream(Amenity.values()).map(Amenity::toString).collect(Collectors.toSet()));
         values.put("houseTypes", Arrays.stream(HouseType.values()).map(HouseType::toString).collect(Collectors.toSet()));
         FieldUtil.addForm(model, user, "/user/save", "Profile", values);
-        return "genericForm";
+        return "profile";
     }
 
     @RequestMapping(value = "/house")
@@ -95,6 +97,21 @@ public class UserController extends GenericController {
             return new RedirectView("/house/view");
         else
             return new RedirectView("/house/register");
+    }
+
+    @RequestMapping(value = "/leave")
+    public String leave(Principal principal) {
+        User user = getUser(principal);
+        Household house = getHousehold(principal);
+        boolean houseAdmin = GenericController.isHouseAdmin(user);
+        user.setHouseName(null);
+        house.getMembers().removeIf(n -> n.equals(user.getName()));
+        repositoryU.save(user);
+        if (houseAdmin){
+            house.getMembers().forEach(name->getUser(name).setHouseName(null));
+            repositoryH.delete(house);
+        }
+        return "redirect:/user/house";
     }
 
 }

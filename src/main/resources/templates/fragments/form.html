@@ -22,12 +22,21 @@
                  type=number
                  th:field="*{__${input.name}__}">
         </label>
+        <label th:if="${input.type} == 'color'" class="w-75">
+          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
+                  type=color
+                  th:field="*{__${input.name}__}">
+        </label>
         <label th:if="${input.type} == 'pass'" class="w-75">
           <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
                  type=password
                  th:field="*{__${input.name}__}">
         </label>
-
+        <label th:if="${input.type} == 'boolean'" class="w-75">
+          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
+                  type=checkbox
+                  th:field="*{__${input.name}__}">
+        </label>
         <label th:if="${input.type} == 'dateTime'" class="w-75">
           <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
                  type=datetime-local

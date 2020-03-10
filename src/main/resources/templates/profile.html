@@ -1,0 +1,11 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/mainLayout}" lang="en-GB">
+
+<body>
+<div layout:fragment="content" class="container">
+  <div th:replace="fragments/form :: form"></div>
+  <div>
+   <a href="/user/leave"> <button class="btn w-100 btn-danger">Leave house</button></a>
+  </div>
+</div>
+</body>
+</html>

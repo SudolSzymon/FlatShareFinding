@@ -5,6 +5,7 @@ import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.web.util.annotation.Private;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -60,7 +61,7 @@ public class FieldUtil {
     }
 
     public static void addForm(Model model, Object obj, String formUrl, String formName) {
-        addForm(model, obj, formUrl, formName, null);
+        addForm(model, obj, formUrl, formName, Collections.emptyMap());
     }
 
     public static void addList(Model model, Iterable<?> list, String listName, String delUrl, String editUrl) {

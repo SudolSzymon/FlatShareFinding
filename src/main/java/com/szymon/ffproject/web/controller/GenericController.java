@@ -5,6 +5,8 @@ import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.DataCache;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
+import com.szymon.ffproject.web.util.annotation.FormTransient;
+import com.szymon.ffproject.web.util.annotation.Private;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
@@ -23,6 +25,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 public abstract class GenericController {
 
+    @FormTransient
+    @Private
+    public static final String HOUSE_ADMIN_PREFIX = "HAdmin-";
     protected static final Logger logger = Logger.getLogger(GenericController.class);
 
     @Autowired
@@ -48,6 +53,10 @@ public abstract class GenericController {
         return new RedirectionException(302, URI.create(url));
     }
 
+    public static boolean isHouseAdmin(User user) {
+        return user.getRoles().contains(HOUSE_ADMIN_PREFIX + user.getHouseName());
+    }
+
     public Household getHousehold(Principal principal) {
         User mainUser = getUser(principal);
         String houseName = mainUser.getHouseName();
@@ -56,7 +65,9 @@ public abstract class GenericController {
         Optional<Household> house = repositoryH.findById(houseName);
         if (house.isPresent())
             return house.get();
-        throw badRequestException("House not found");
+        mainUser.setHouseName(null);
+        repositoryU.save(mainUser);
+        throw redirectException("/user/house");
     }
 
     public Household getHousehold(String name) {
@@ -68,7 +79,11 @@ public abstract class GenericController {
 
 
     public User getUser(Principal principal) {
-        Optional<User> user = repositoryU.findById(principal.getName());
+      return getUser(principal.getName());
+    }
+
+    public User getUser(String name) {
+        Optional<User> user = repositoryU.findById(name);
         if (user.isPresent())
             return user.get();
         throw badRequestException("User not found");

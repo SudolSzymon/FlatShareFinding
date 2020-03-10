@@ -2,14 +2,22 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
+import com.szymon.ffproject.database.converter.DateTimeConverter;
+import com.szymon.ffproject.web.util.annotation.DisplayAs;
 import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.database.converter.DateTimeConverter;
+import com.szymon.ffproject.web.util.annotation.Private;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,10 +34,29 @@ public class Event {
     @Future
     @InputType(type = "dateTime")
     private LocalDateTime end;
+    @DisplayAs(display = "Event color")
+    @InputType(type = "color")
+    private String backgroundColor = "#add8e6";
     @FormTransient
+    @Private
     private final boolean allDay = false;
     @Size(min = 1, max = 1000)
+    @InputType(type = "valueSelect")
     private transient Set<String> participants;
+    @InputType(type = "boolean")
+    private transient boolean repeat;
+    @FormTransient
+    @Private
+    private String startTime;
+    @FormTransient
+    @Private
+    private String endTime;
+    @InputType(type = "valueSelect")
+    @DisplayAs(display = "Repeats on")
+    private transient Set<String> repeatOn;
+    @FormTransient
+    @Private
+    private List<String> daysOfWeek;
 
 
     @DynamoDBAttribute
@@ -68,5 +95,83 @@ public class Event {
 
     public void setParticipants(Set<String> participants) {
         this.participants = participants;
+    }
+
+    @DynamoDBAttribute
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, start, end);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Event))
+            return false;
+        Event event = (Event) obj;
+        return obj == this || (Objects.equals(title, event.title) && Objects.equals(start, event.start) && Objects
+            .equals(end, event.end) && Objects.equals(endTime, event.endTime) && Objects.equals(startTime, event.startTime));
+    }
+
+    @DynamoDBAttribute
+    public boolean isRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
+    }
+
+    @DynamoDBAttribute
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    @DynamoDBAttribute
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void convertToRecurringEvent() {
+        startTime = start.format(DateTimeFormatter.ofPattern("HH:mm"));
+        start = null;
+        endTime = end.format(DateTimeFormatter.ofPattern("HH:mm"));
+        end = null;
+        if(repeatOn!= null && !repeatOn.isEmpty())
+            daysOfWeek =  repeatOn.stream().map(DayOfWeek::valueOf).map(DayOfWeek::getValue).map(String::valueOf).collect(Collectors.toList());
+    }
+
+    @DynamoDBTyped(DynamoDBAttributeType.L)
+    public Set<String> getRepeatOn() {
+        return repeatOn;
+    }
+
+    public void setRepeatOn(Set<String> repeatOn) {
+        this.repeatOn = repeatOn;
+    }
+
+    @DynamoDBTyped(DynamoDBAttributeType.L)
+    public List<String> getDaysOfWeek() {
+        return daysOfWeek;
+    }
+
+    public void setDaysOfWeek(List<String> daysOfWeek) {
+        this.daysOfWeek = daysOfWeek;
     }
 }

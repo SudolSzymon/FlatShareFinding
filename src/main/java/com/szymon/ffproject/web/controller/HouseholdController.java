@@ -9,6 +9,7 @@ import com.szymon.ffproject.web.util.FieldUtil;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import java.security.Principal;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -36,35 +37,45 @@ public class HouseholdController extends GenericController {
     @GetMapping("/view")
     public String login(Model model, Principal principal) {
         Household house = getHousehold(principal);
+        User user = getUser(principal);
         model.addAttribute("members", house.getMembers());
         model.addAttribute("houseName", house.getName());
-        return "household";
+        boolean isAdmin = GenericController.isHouseAdmin(user);
+        FieldUtil.addList(model, house.getMembers().stream().map(this::getUser).collect(Collectors.toSet()), "Members",
+                          isAdmin ? "/house/remove" : null, null);
+        if (isAdmin) {
+            FieldUtil.addForm(model, house, "/house/edit", "Edit house");
+            return "generic/genericListFormOnSide";
+        }
+        return "generic/genericList";
     }
 
 
     @GetMapping("/add")
     public String add(Model model, Household house) {
         FieldUtil.addForm(model, house, "/house/create", "Create Household");
-        return "genericForm";
+        return "generic/genericForm";
     }
 
     @PostMapping(value = "/create")
-    public RedirectView create(@ModelAttribute Household household, Principal principal) {
+    public String create(@ModelAttribute Household household, Principal principal) {
+        if (repositoryH.existsById(household.getName()))
+            return "error/duplicate";
         household.encrypt(passwordEncoder);
         household.setMembers(Sets.newHashSet(principal.getName()));
         User user = getUser(principal);
-        user.getRoles().add("HAdmin");
+        user.getRoles().add(GenericController.HOUSE_ADMIN_PREFIX + household.getName());
         user.setHouseName(household.getName());
         repositoryU.save(user);
         repositoryH.save(household);
-        return new RedirectView("/house/view");
+        return "redirect:/house/view";
     }
 
 
     @GetMapping(value = "/register")
     public String prepareRegister(Model model, HouseholdSignUpData data) {
         FieldUtil.addForm(model, data, "/house/register", "Register to HouseHold");
-        return "genericForm";
+        return "houseRegistration";
     }
 
 

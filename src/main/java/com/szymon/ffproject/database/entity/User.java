@@ -13,8 +13,10 @@ import com.szymon.ffproject.web.util.annotation.Private;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +41,10 @@ public class User {
     @Private
     private String houseName;
     private String description;
+    @Email
+    private String email;
+    @Pattern(regexp = "^\\+(?:[0-9]●?){6,14}[0-9]$", message = "Please enter valid phone number prefixed with country code")
+    private String phone;
     @Positive
     @Max(100000)
     @DisplayAs(display = "Monthly Budget")
@@ -177,4 +183,23 @@ public class User {
     public void setHouseTypes(List<String> houseTypes) {
         this.houseTypes = houseTypes;
     }
+
+    @DynamoDBAttribute
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @DynamoDBAttribute
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
 }

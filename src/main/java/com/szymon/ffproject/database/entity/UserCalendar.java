@@ -3,25 +3,23 @@ package com.szymon.ffproject.database.entity;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @DynamoDBDocument
 public class UserCalendar {
 
-    private List<Event> events;
+    private Set<Event> events;
 
 
     @DynamoDBTyped(DynamoDBAttributeType.L)
-    public List<Event> getEvents() {
+    public Set<Event> getEvents() {
         if (events == null)
-            events = new LinkedList<>();
+            events = new HashSet<>();
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(Set<Event> events) {
         this.events = events;
     }
 
