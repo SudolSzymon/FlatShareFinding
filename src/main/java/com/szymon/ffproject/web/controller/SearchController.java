@@ -26,13 +26,13 @@ public class SearchController extends GenericController {
     }
 
     @RequestMapping()
-    public  String test(Model model , @ModelAttribute UserDataCacheFilter filter){
+    public String search(Model model, @ModelAttribute UserDataCacheFilter filter) {
         List<User> res = dataCache.getUsers(filter);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("amenities", Amenity.stringValues());
         values.put("houseTypes", HouseType.stringValues());
-        FieldUtil.addForm(model, filter, "/search", "Search", values);
-        FieldUtil.addList(model, res,"Test",null,null);
-        return "generic/genericListFormOnSide";
+        FieldUtil.addObject(model, filter, "/search", "Search", values);
+        FieldUtil.addList(model, res, "Best match for you", null, null, "/user/view");
+        return "searchResults";
     }
 }

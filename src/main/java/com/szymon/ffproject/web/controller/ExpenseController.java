@@ -37,7 +37,7 @@ public class ExpenseController extends GenericController {
         Map<String, Set<String>> values = new HashMap<>();
         values.put("lender", house.getMembers());
         values.put("borrower", house.getMembers());
-        FieldUtil.addForm(model, expense, "/expense/create", "New Expense", values);
+        FieldUtil.addObject(model, expense, "/expense/create", "New Expense", values);
         return "generic/genericListFormOnSide";
     }
 

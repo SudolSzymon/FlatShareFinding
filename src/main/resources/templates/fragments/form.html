@@ -3,47 +3,48 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+  <script src="js/fileInput.js"></script>
 
 
   <div class="card">
-    <h4 class="card-header-pills mt-3 text-center" th:text="${formName}">Title</h4>
+    <h4 class="card-header-pills mt-3 text-center" th:text="${name}">Title</h4>
 
 
     <form class="card-body" action="#" th:action="${formUrl}" th:object="${object}" method="post">
       <div class="form-group" th:each="input : ${inputs}">
         <label class="w-25 text-wrap" th:text="${input.display}">display</label>
         <label th:if="${input.type} == 'text'" class="w-75">
-          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
+          <input class="h-100 form-control" th:name="${input.name}" th:placeholder="${input.display}"
                  type=text
                  th:field="*{__${input.name}__}">
         </label>
         <label th:if="${input.type} == 'number'" class="w-75">
-          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
+          <input class="h-100 form-control" th:name="${input.name}" th:placeholder="${input.display}"
                  type=number
                  th:field="*{__${input.name}__}">
         </label>
         <label th:if="${input.type} == 'color'" class="w-75">
-          <input  th:name="${input.name}" class="h-100 form-control" th:placeholder="${input.display}"
-                  type=color
-                  th:field="*{__${input.name}__}">
+          <input class="h-100 form-control" th:field="*{__${input.name}__}" th:name="${input.name}"
+                 th:placeholder="${input.display}"
+                 type=color>
         </label>
         <label th:if="${input.type} == 'pass'" class="w-75">
-          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
+          <input class="form-control" th:name="${input.name}" th:placeholder="${input.display}"
                  type=password
                  th:field="*{__${input.name}__}">
         </label>
         <label th:if="${input.type} == 'boolean'" class="w-75">
-          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
-                  type=checkbox
-                  th:field="*{__${input.name}__}">
+          <input class="form-control" th:field="*{__${input.name}__}" th:name="${input.name}"
+                 th:placeholder="${input.display}"
+                 type=checkbox>
         </label>
         <label th:if="${input.type} == 'dateTime'" class="w-75">
-          <input  th:name="${input.name}" class="form-control" th:placeholder="${input.display}"
+          <input class="form-control" th:name="${input.name}" th:placeholder="${input.display}"
                  type=datetime-local
                  th:field="*{__${input.name}__}">
         </label>
         <label th:if="${input.type} == 'valueSelect'" class="w-75">
-          <select  multiple th:name="${input.name}" class="selectpicker "
+          <select class="selectpicker " multiple th:name="${input.name}"
                   data-live-search="true" th:field="*{__${input.name}__}">
             <option th:value="${option}" th:each=" option: ${input.options}" th:text="${option}">Option</option>
           </select>
@@ -52,7 +53,7 @@
               th:errors="*{__${input.name}__}">error</span>
       </div>
       <div class="text-center">
-      <button type="submit" class="btn btn-primary w-25 " >Submit</button>
+        <button class="btn btn-primary w-25 " type="submit">Submit</button>
       </div>
     </form>
   </div>

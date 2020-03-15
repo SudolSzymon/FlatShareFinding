@@ -68,8 +68,9 @@ public class CalendarController extends GenericController {
         Event event = getAttribute(model, "object", Event.class);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("participants", getHousehold(principal).getMembers());
-        values.put("repeatOn", Arrays.stream(DayOfWeek.values()).map(Enum::toString).collect(Collectors.toCollection(LinkedHashSet::new)));
-        FieldUtil.addForm(model, event, "/calendar/event/create", "Create Event", values);
+        values.put("repeatOn",
+                   Arrays.stream(DayOfWeek.values()).map(Enum::toString).collect(Collectors.toCollection(LinkedHashSet::new)));
+        FieldUtil.addObject(model, event, "/calendar/event/create", "Create Event", values);
         FieldUtil.addList(model, user.getCalendar().getEvents(), "Events", null, null);
         return "generic/genericListFormOnSide";
     }

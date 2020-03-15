@@ -36,7 +36,7 @@ public class ShoppingListController extends GenericController {
     public String view(Model model, Principal principal) {
         Household household = getHousehold(principal);
         FieldUtil.addList(model, household.getLists().values(), "Shopping Lists", "../delete/id", "../edit/id");
-        FieldUtil.addForm(model, getAttribute(model, "object", ShopList.class), "../create", "New List");
+        FieldUtil.addObject(model, getAttribute(model, "object", ShopList.class), "../create", "New List");
         return "generic/genericListFormOnSide";
     }
 
@@ -52,7 +52,7 @@ public class ShoppingListController extends GenericController {
     public String edit(Model model, @PathVariable String name, Principal principal) {
         Household household = getHousehold(principal);
         FieldUtil.addList(model, household.getList(name).getItemList(), name, "../delete/item/" + name, null);
-        FieldUtil.addForm(model, new ShopItem(), "/shop/add/item/" + name, "New Item");
+        FieldUtil.addObject(model, new ShopItem(), "/shop/add/item/" + name, "New Item");
         return "generic/genericListFormOnSide";
     }
 

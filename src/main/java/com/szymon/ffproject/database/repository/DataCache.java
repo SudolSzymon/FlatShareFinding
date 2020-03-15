@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import javax.jws.soap.SOAPBinding.Use;
 
 public class DataCache {
 
@@ -18,7 +17,7 @@ public class DataCache {
     public DataCache(UserRepository userRepository) {
         userCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(Duration.ofMinutes(10))
+            .expireAfterWrite(Duration.ofMinutes(120))
             .build(
                 new CacheLoader<DataCacheFilter<User>, List<User>>() {
                     @Override

@@ -1,8 +1,6 @@
 package com.szymon.ffproject.web.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,22 +10,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@ImportResource({"classpath*:AppContext.xml"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
+
+    public WebSecurityConfig(PasswordEncoder passwordEncoder,
+                             UserDetailsService userDetailsService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/", "/home","/random").authenticated()
-            .antMatchers("/user/create", "/user/register", "/js/**", "/css/**")
+            .antMatchers("/", "/home").permitAll()
+            .antMatchers("/user/create", "/user/register", "/js/**", "/css/**", "/graphics/**")
             .permitAll()
-            .anyRequest().authenticated()
+            .antMatchers("/user/**", "/calendar/**", "/expense/**", "/house/**", "/search/**", "/shop/**")
+            .authenticated()
+            .anyRequest()
+            .denyAll()
             .and()
             .formLogin()
             .loginPage("/user/login")
@@ -39,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/403");
+
     }
 
 

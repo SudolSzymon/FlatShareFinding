@@ -1,0 +1,14 @@
+<html lang="en-GB" layout:decorate="~{fragments/mainLayoutSidePanel}"
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<div class="container" layout:fragment="sidePanel">
+  <div th:replace="fragments/vForm :: vForm"></div>
+</div>
+<div class="container" layout:fragment="content">
+  <h1 th:text="${listName}">title</h1>
+  <div th:replace="fragments/searchResultList :: searchResultList"></div>
+</div>
+</body>
+</html>

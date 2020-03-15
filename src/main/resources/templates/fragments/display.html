@@ -1,0 +1,16 @@
+<div th:fragment="display" xmlns:th="http://www.w3.org/1999/xhtml">
+
+  <div class="card">
+    <h4 class="card-header-pills mt-3 text-center" th:text="${name}">View</h4>
+    <div class="card-body text-center">
+      <div class="form-group" th:each="input : ${inputs}">
+        <span class="w-25 text-wrap" th:text="${input.display} + ' : '">display</span>
+        <span class="w-75" th:text="${object.__${input.name}__}">text</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

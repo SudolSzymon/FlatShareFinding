@@ -2,15 +2,14 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import com.szymon.ffproject.database.converter.DateTimeConverter;
 import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.web.util.annotation.Private;
+import com.szymon.ffproject.web.util.annotation.Transient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +36,7 @@ public class Event {
     @DisplayAs(display = "Event color")
     @InputType(type = "color")
     private String backgroundColor = "#add8e6";
-    @FormTransient
+    @Transient
     @Private
     private final boolean allDay = false;
     @Size(min = 1, max = 1000)
@@ -45,16 +44,16 @@ public class Event {
     private transient Set<String> participants;
     @InputType(type = "boolean")
     private transient boolean repeat;
-    @FormTransient
+    @Transient
     @Private
     private String startTime;
-    @FormTransient
+    @Transient
     @Private
     private String endTime;
     @InputType(type = "valueSelect")
     @DisplayAs(display = "Repeats on")
     private transient Set<String> repeatOn;
-    @FormTransient
+    @Transient
     @Private
     private List<String> daysOfWeek;
 

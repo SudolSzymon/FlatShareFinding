@@ -1,15 +1,19 @@
 package com.szymon.ffproject.web.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.S3Object;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.DataCache;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import com.szymon.ffproject.database.repository.UserRepository;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.Private;
+import com.szymon.ffproject.web.util.annotation.Transient;
+import java.io.File;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.Valid;
 import javax.ws.rs.RedirectionException;
 import org.apache.log4j.Logger;
@@ -25,13 +29,16 @@ import org.springframework.web.servlet.view.RedirectView;
 
 public abstract class GenericController {
 
-    @FormTransient
+    @Transient
     @Private
     public static final String HOUSE_ADMIN_PREFIX = "HAdmin-";
     protected static final Logger logger = Logger.getLogger(GenericController.class);
+    public static final String MAIN_BUCKET = "roomieappstorage";
 
     @Autowired
     protected DataCache dataCache;
+    @Autowired
+    protected AmazonS3 s3Client;
     protected final UserRepository repositoryU;
     protected final HouseholdRepository repositoryH;
 
@@ -104,6 +111,25 @@ public abstract class GenericController {
             }
         }
         return expense;
+    }
+
+    public S3Object getFromS3(String id) {
+        return s3Client.getObject(MAIN_BUCKET, id);
+    }
+
+
+    public void deleteFromS3(String id) {
+        s3Client.deleteObject(MAIN_BUCKET, id);
+    }
+
+    public String putToS3(File file) {
+        String id = UUID.randomUUID().toString();
+        s3Client.putObject(MAIN_BUCKET, id, file);
+        return id;
+    }
+
+    public String getS3Link(String key) {
+        return s3Client.getUrl(MAIN_BUCKET, key).toString();
     }
 
     public void storeBindingResult(

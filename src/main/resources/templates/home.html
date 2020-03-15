@@ -1,11 +1,26 @@
-
-<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/mainLayout}">
+<html layout:decorate="~{fragments/emptyLayout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Home</title>
+  <title>Home</title>
+  <style>
+    .splashImg {
+      object-fit: contain;
+      position: fixed;
+    }
+  </style>
 </head>
 <body>
-<div layout:fragment="content" class="container">
-
+<div layout:fragment="content">
+  <img alt="img" class="splashImg w-50 float-left" src="graphics/baylee-gramling-people.jpg">
+  <div class="w-50 float-right" style="padding-top: 10%; padding-left: 15%">
+    <H1>Rooomie</H1>
+    <h4 style="opacity: 75%">The best app you do not need</h4>
+    <a href="/user/register">
+      <button class="btn-primary btn-lg" style="margin-top: 10%; width: 50%">Sign up</button>
+    </a>
+    <a href="/user/login">
+      <button class="btn-outline-primary btn-lg" style="margin-top: 16px; width: 50%; background-color: white">Login</button>
+    </a>
+  </div>
 </div>
 </body>
 </html>

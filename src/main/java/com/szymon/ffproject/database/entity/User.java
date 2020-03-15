@@ -7,9 +7,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.D
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.web.util.annotation.Private;
+import com.szymon.ffproject.web.util.annotation.Transient;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +28,13 @@ public class User {
     @NotBlank
     @Unmodifiable
     private String name;
-    @FormTransient
+    @Transient
     @Private
     private List<String> roles;
-    @FormTransient
+    @Transient
     @Private
     private String password;
-    @FormTransient
+    @Transient
     @Private
     private UserCalendar calendar;
     @Unmodifiable
@@ -43,29 +43,37 @@ public class User {
     private String description;
     @Email
     private String email;
-    @Pattern(regexp = "^\\+(?:[0-9]●?){6,14}[0-9]$", message = "Please enter valid phone number prefixed with country code")
+    @Pattern(regexp = "(^$)|(^\\+(?:[0-9]●?){6,14}[0-9]$)", message = "Please enter valid phone number prefixed with country code")
     private String phone;
     @Positive
     @Max(100000)
     @DisplayAs(display = "Monthly Budget")
     @InputType(type = "number")
+    @Private
     private Double monthlyBudget;
     @Positive
     @Max(1000)
     @InputType(type = "number")
     @DisplayAs(display = "Distance to center in minutes")
+    @Private
     private Integer distanceToCenter;
     @Size(max = 10)
     @InputType(type = "valueSelect")
     @DisplayAs(display = "Expected amenities")
+    @Private
     private List<String> amenities;
     @Size(max = 10)
     @InputType(type = "valueSelect")
+    @Private
     private List<String> houseTypes;
     @Positive
     @DisplayAs(display = "Flat size in meters")
     @InputType(type = "number")
+    @Private
     private Integer houseSize;
+    @Transient
+    @Private
+    private String avatarUniqueName;
 
     @DynamoDBHashKey
     public String getName() {
@@ -200,6 +208,16 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+
+    @DynamoDBAttribute
+    public String getAvatarUniqueName() {
+        return avatarUniqueName;
+    }
+
+    public void setAvatarUniqueName(String avatarUniqueName) {
+        this.avatarUniqueName = avatarUniqueName;
     }
 
 }

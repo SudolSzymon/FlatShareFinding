@@ -1,0 +1,18 @@
+<html lang="en-GB" layout:decorate="~{fragments/mainLayout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<body>
+<div class="container" layout:fragment="content">
+  <div class="d-flex justify-content-center" style="margin-bottom: 20px">
+    <div class="text-center card w-50">
+      <div class="text-center">
+        <img alt="img" class="rounded-circle" src="https://roomieappstorage.s3.eu-west-2.amazonaws.com/account.svg"
+             style="width: 40%; margin-bottom: 30px; margin-top: 50px" th:if="${imageUrl == null}">
+        <img alt="img" class="rounded-circle" style="width: 40%; margin-bottom: 30px; margin-top: 50px"
+             th:if="${imageUrl != null}" th:src="${imageUrl}">
+      </div>
+    </div>
+  </div>
+  <div th:replace="fragments/display :: display"></div>
+</div>
+</body>
+</html>

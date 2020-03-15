@@ -1,12 +1,12 @@
 package com.szymon.ffproject.web.util;
 
 import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
 import com.szymon.ffproject.web.util.annotation.Private;
+import com.szymon.ffproject.web.util.annotation.Transient;
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -45,32 +45,39 @@ public class FieldUtil {
             if (fieldType.equals("valueSelect")) {
                 fieldOptions = optionsMap.getOrDefault(field.getName(), Collections.emptySet());
             }
-            if (!field.isAnnotationPresent(FormTransient.class))
+            if (!field.isAnnotationPresent(Transient.class))
                 list.add(new FieldUtil(field.getName(), fieldType, fieldOptions,
                                        fieldDisplay.isEmpty() ? field.getName() : fieldDisplay));
         }
         return list;
     }
 
-    public static void addForm(Model model, Object obj, String formUrl, String formName,
-                               Map<String, Set<String>> optionsMap) {
+    public static void addObject(Model model, Object obj, String formUrl, String name,
+                                 Map<String, Set<String>> optionsMap) {
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("object", obj);
-        model.addAttribute("formName", formName);
-        model.addAttribute("inputs", getInputList(obj, optionsMap));
+        model.addAttribute("name", name);
+        model.addAttribute("inputs", getInputList(obj, optionsMap == null ? new HashMap<>() : optionsMap));
     }
 
-    public static void addForm(Model model, Object obj, String formUrl, String formName) {
-        addForm(model, obj, formUrl, formName, Collections.emptyMap());
+    public static void addObject(Model model, Object obj, String formUrl, String formName) {
+        addObject(model, obj, formUrl, formName, Collections.emptyMap());
     }
 
     public static void addList(Model model, Iterable<?> list, String listName, String delUrl, String editUrl) {
+        addList(model, list, listName, delUrl, editUrl, null);
+    }
+
+    public static void addList(
+        Model model, Iterable<?> list, String listName, String delUrl, String editUrl, Object viewUrl) {
         model.addAttribute("list", list);
         model.addAttribute("listName", listName);
         if (delUrl != null)
             model.addAttribute("delUrl", delUrl);
         if (editUrl != null)
             model.addAttribute("editUrl", editUrl);
+        if (viewUrl != null)
+            model.addAttribute("viewUrl", viewUrl);
         if (list.iterator().hasNext())
             model.addAttribute("mappings", getColumnList(list.iterator().next()));
     }

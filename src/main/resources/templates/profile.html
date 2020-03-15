@@ -2,9 +2,32 @@
 
 <body>
 <div layout:fragment="content" class="container">
+  <div class="d-flex justify-content-center" style="margin-bottom: 20px">
+    <div class="text-center card w-50">
+      <div class="text-center">
+        <img alt="img" class="rounded-circle" src="https://roomieappstorage.s3.eu-west-2.amazonaws.com/account.svg"
+             style="width: 40%; margin-bottom: 30px; margin-top: 50px" th:if="${imageUrl == null}">
+        <img alt="img" class="rounded-circle" style="width: 40%; margin-bottom: 30px; margin-top: 50px"
+             th:if="${imageUrl != null}" th:src="${imageUrl}">
+      </div>
+      <form action="#" enctype="multipart/form-data" method="post" th:action="@{/user/uploadAvatar}">
+        <div class="form-group">
+          <label>
+            <input accept="image/jpeg" class="form-control" name="image" type="file">
+          </label>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary w-25 " style="margin-top: 20px; margin-bottom: 20px" type="submit">Submit</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
   <div th:replace="fragments/form :: form"></div>
   <div>
-   <a href="/user/leave"> <button class="btn w-100 btn-danger">Leave house</button></a>
+    <a href="/user/leave">
+      <button class="btn w-100 btn-danger">Leave house</button>
+    </a>
   </div>
 </div>
 </body>

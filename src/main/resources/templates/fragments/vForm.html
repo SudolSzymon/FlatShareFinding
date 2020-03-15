@@ -5,7 +5,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
   <div class="card">
-    <h4 class="card-header-pills mt-3 text-center" th:text="${formName}">Title</h4>
+    <h4 class="card-header-pills mt-3 text-center" th:text="${name}">Title</h4>
 
     <form class="card-body" th:action="${formUrl}" th:object="${object}" method="post">
     <span class="form-group" th:each="input : ${inputs}">

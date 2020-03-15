@@ -6,11 +6,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
 import com.szymon.ffproject.web.util.annotation.InputType;
+import com.szymon.ffproject.web.util.annotation.Transient;
 import com.szymon.ffproject.web.util.annotation.Unmodifiable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -30,11 +29,11 @@ public class Household {
     @NotBlank
     @InputType(type = "pass")
     private String password;
-    @FormTransient
+    @Transient
     private Set<String> members;
-    @FormTransient
+    @Transient
     private List<Expense> expenses;
-    @FormTransient
+    @Transient
     private Map<String, ShopList> lists;
 
     @DynamoDBHashKey

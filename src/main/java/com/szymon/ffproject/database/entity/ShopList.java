@@ -2,7 +2,7 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.FormTransient;
+import com.szymon.ffproject.web.util.annotation.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +15,7 @@ public class ShopList {
     private String name;
     @Size(max = 100)
     @DisplayAs(display = "Item list")
-    @FormTransient
+    @Transient
     private List<ShopItem> itemList = new ArrayList<>();
 
     public String getName() {

@@ -1,14 +1,14 @@
 <header th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
 
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top" style="height: 75px">
     <div class="container">
-      <a class="navbar-brand" href="#">
-        "Roomie"
+      <a class="navbar-brand" href="/home">
+        Roomie
       </a>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item" sec:authorize="isAuthenticated()">
-            <a class="nav-link" href="javascript: document.logoutForm.submit()" > Logout</a>
+            <a class="nav-link" href="javascript: document.logoutForm.submit()"> Logout</a>
             <form name="logoutForm" th:action="@{/user/logout}" method="post" th:hidden="true">
               <input hidden type="submit" value="Sign Out"/>
             </form>

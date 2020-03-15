@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="en-GB">
+<html lang="en-GB" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
   <script th:src="@{/js/bootstrap.min.js}"></script>
@@ -11,7 +11,7 @@
 
 <body>
 <div th:replace="fragments/header :: header"></div>
-<div class="jumbotron min-vh-100" style="padding-top: 100px">
+<div class="min-vh-100" style="padding-top: 75px">
   <div layout:fragment="content"></div>
 </div>
 </body>

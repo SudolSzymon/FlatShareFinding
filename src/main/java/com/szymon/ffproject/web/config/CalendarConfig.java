@@ -8,7 +8,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.szymon.ffproject.database.entity.Event;
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -23,6 +22,7 @@ public class CalendarConfig {
     private final String defaultView;
     private final Map<String, String> header;
     private final boolean eventLimit;
+    private final String height;
     private Set<Event> events;
 
     public CalendarConfig() {
@@ -32,7 +32,8 @@ public class CalendarConfig {
         header.put("left", "prev,next,today");
         header.put("center", "title");
         header.put("right", "dayGridMonth,timeGridWeek,timeGridDay");
-        eventLimit = true;
+        eventLimit = false;
+        height = "auto";
     }
 
     @Bean
