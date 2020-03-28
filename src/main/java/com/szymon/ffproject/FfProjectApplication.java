@@ -18,5 +18,4 @@ public class FfProjectApplication {
         DBInitializer initializer = (DBInitializer) applicationContext.getBean("DBInitializer");
         initializer.init();
     }
-
 }

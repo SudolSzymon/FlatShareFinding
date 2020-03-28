@@ -6,10 +6,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.D
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import com.szymon.ffproject.database.converter.DateTimeConverter;
-import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.web.util.annotation.Private;
-import com.szymon.ffproject.web.util.annotation.Transient;
+import com.szymon.ffproject.util.annotation.DisplayAs;
+import com.szymon.ffproject.util.annotation.InputType;
+import com.szymon.ffproject.util.annotation.Private;
+import com.szymon.ffproject.util.annotation.Transient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

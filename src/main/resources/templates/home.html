@@ -14,10 +14,10 @@
   <div class="w-50 float-right" style="padding-top: 10%; padding-left: 15%">
     <H1>Rooomie</H1>
     <h4 style="opacity: 75%">The best app you do not need</h4>
-    <a href="/user/register">
+    <a href="/user/register" sec:authorize="isAnonymous()">
       <button class="btn-primary btn-lg" style="margin-top: 10%; width: 50%">Sign up</button>
     </a>
-    <a href="/user/login">
+    <a href="/user/login" sec:authorize="isAnonymous()">
       <button class="btn-outline-primary btn-lg" style="margin-top: 16px; width: 50%; background-color: white">Login</button>
     </a>
   </div>

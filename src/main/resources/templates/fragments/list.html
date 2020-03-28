@@ -1,5 +1,6 @@
 <div th:fragment="list" xmlns:th="http://www.w3.org/1999/xhtml">
-  <table class="table">
+  <h3 th:if="${#lists.isEmpty(list)}">Nothing to show here yet</h3>
+  <table class="table" th:if="${not #lists.isEmpty(list)}">
     <thead>
     <tr>
       <th scope="col" th:each="ent : ${mappings}" th:text="${ent.value}">Name</th>

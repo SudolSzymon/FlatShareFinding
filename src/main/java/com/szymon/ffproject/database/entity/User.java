@@ -6,11 +6,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
-import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.web.util.annotation.Private;
-import com.szymon.ffproject.web.util.annotation.Transient;
-import com.szymon.ffproject.web.util.annotation.Unmodifiable;
+import com.szymon.ffproject.util.annotation.DisplayAs;
+import com.szymon.ffproject.util.annotation.InputType;
+import com.szymon.ffproject.util.annotation.Private;
+import com.szymon.ffproject.util.annotation.Transient;
+import com.szymon.ffproject.util.annotation.Unmodifiable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Email;
@@ -92,9 +92,8 @@ public class User {
         return roles;
     }
 
-    public User setRoles(List<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
-        return this;
     }
 
 

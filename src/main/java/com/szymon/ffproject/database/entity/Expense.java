@@ -2,9 +2,8 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
-import com.szymon.ffproject.web.util.annotation.InputType;
+import com.szymon.ffproject.util.annotation.InputType;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @DynamoDBDocument

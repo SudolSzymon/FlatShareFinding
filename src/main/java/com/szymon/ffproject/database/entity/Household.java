@@ -6,9 +6,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
-import com.szymon.ffproject.web.util.annotation.InputType;
-import com.szymon.ffproject.web.util.annotation.Transient;
-import com.szymon.ffproject.web.util.annotation.Unmodifiable;
+import com.szymon.ffproject.util.annotation.InputType;
+import com.szymon.ffproject.util.annotation.Transient;
+import com.szymon.ffproject.util.annotation.Unmodifiable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @DynamoDBTable(tableName = "Households")
 public class Household {
@@ -107,8 +106,6 @@ public class Household {
         getLists().put(list.getName(), list);
     }
 
-    public ShopList getListByIndex(@PathVariable Integer index) {
-        return getLists().values().toArray(new ShopList[0])[index];
-    }
+
 }
 

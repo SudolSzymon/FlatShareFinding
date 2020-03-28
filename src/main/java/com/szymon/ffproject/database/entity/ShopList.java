@@ -1,8 +1,8 @@
 package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
-import com.szymon.ffproject.web.util.annotation.DisplayAs;
-import com.szymon.ffproject.web.util.annotation.Transient;
+import com.szymon.ffproject.util.annotation.DisplayAs;
+import com.szymon.ffproject.util.annotation.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
