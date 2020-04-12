@@ -1,6 +1,6 @@
 package com.szymon.ffproject.controller;
 
-import com.szymon.ffproject.cache.UserDataCacheFilter;
+import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.service.HouseholdService;
@@ -29,7 +29,7 @@ public class SearchController extends GenericController {
     }
 
     @RequestMapping()
-    public String search(Model model, @ModelAttribute UserDataCacheFilter filter) {
+    public String search(Model model, @ModelAttribute UserFilter filter) {
         List<User> res = serviceU.getUsers(filter);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("amenities", Amenity.stringValues());

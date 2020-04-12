@@ -1,4 +1,4 @@
-package com.szymon.ffproject.config;
+package com.szymon.ffproject.service;
 
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.UserRepository;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class UserDetailsProvider implements UserDetailsService {
+public class UserDetailsProviderService implements UserDetailsService {
 
     @Autowired
     UserRepository repository;

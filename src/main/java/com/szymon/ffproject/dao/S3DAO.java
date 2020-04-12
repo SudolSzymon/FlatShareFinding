@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
 
 @Component
-public class S3DAO implements GenericDAO<File, String> {
+public class S3DAO implements DAO<File, String> {
 
     public static final String MAIN_BUCKET = "roomieappstorage";
     private final AmazonS3 s3Client;

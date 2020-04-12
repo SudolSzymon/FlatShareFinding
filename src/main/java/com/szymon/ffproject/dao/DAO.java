@@ -1,6 +1,6 @@
 package com.szymon.ffproject.dao;
 
-public interface GenericDAO<T, U> {
+public interface DAO<T, U> {
 
     void save(T object);
 

@@ -1,17 +1,16 @@
 package com.szymon.ffproject.dao;
 
 import com.google.common.cache.LoadingCache;
-import com.szymon.ffproject.cache.DataCache;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class CachedDAO<T, U> implements GenericDAO<T, U> {
+public abstract class CachedDAO<T, U> implements DAO<T, U> {
 
-    protected final DataCache dataCache;
-
-    public CachedDAO(DataCache dataCache) {this.dataCache = dataCache;}
+    private static final Logger logger = LoggerFactory.getLogger(CachedDAO.class);
 
     @Override
     public final void save(T object) {
@@ -26,8 +25,8 @@ public abstract class CachedDAO<T, U> implements GenericDAO<T, U> {
 
     @Override
     public final void delete(U id) {
-        getCache().invalidate(id);
         getRepository().deleteById(id);
+        getCache().invalidate(id);
     }
 
 
@@ -36,6 +35,7 @@ public abstract class CachedDAO<T, U> implements GenericDAO<T, U> {
         try {
             return getCache().get(id);
         } catch (ExecutionException e) {
+            logger.error("Failed to load object from " + this.getClass().getName(), e);
             return null;
         }
     }

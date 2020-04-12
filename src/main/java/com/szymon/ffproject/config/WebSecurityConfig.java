@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
             .antMatchers("/", "/home").permitAll()
-            .antMatchers("/user/create", "/user/register", "/js/**", "/css/**", "/graphics/**")
+            .antMatchers("/user/create", "/user/register", "/js/**", "/css/**")
             .permitAll()
             .antMatchers("/user/**", "/calendar/**", "/expense/**", "/house/**", "/search/**", "/shop/**")
             .authenticated()
@@ -45,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().accessDeniedPage("/403");
 
     }
-
 
 
     @Override

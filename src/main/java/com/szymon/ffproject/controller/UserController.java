@@ -33,10 +33,12 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping(value = "/user")
 public class UserController extends GenericController {
 
+    private final Gson gson;
 
     public UserController(HouseholdService householdService,
-                          UserService userService, S3DAO s3DAO) {
+                          UserService userService, S3DAO s3DAO, Gson gson) {
         super(householdService, userService, s3DAO);
+        this.gson = gson;
     }
 
     @RequestMapping("/login")
@@ -56,7 +58,7 @@ public class UserController extends GenericController {
         if (serviceU.exists(user))
             return "duplicate";
         serviceU.newUser(user);
-        logger.info("Created user: " + new Gson().toJson(user));
+        logger.info("Created user: " + gson.toJson(user));
         return "redirect:/";
     }
 

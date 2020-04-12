@@ -25,9 +25,6 @@ public class DBInitializer {
     public void init() {
         try {
             dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
-            //amazonDynamoDB.deleteTable("Users");
-            //amazonDynamoDB.deleteTable("Households");
-
             createTable(User.class);
             createTable(Household.class);
             logger.info(amazonDynamoDB.listTables());

@@ -12,25 +12,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.ui.Model;
 
 public class FieldUtil {
 
-    public final String name;
-    public final String type;
-    public final Set<String> options;
-    public final String display;
-
-    public FieldUtil(String name, String fieldType, Set<String> options, String display) {
-        this.name = name;
-        this.type = fieldType;
-        this.options = options;
-        this.display = display;
-    }
-
-    private static List<FieldUtil> getInputList(Object o, Map<String, Set<String>> optionsMap) {
-        LinkedList<FieldUtil> list = new LinkedList<>();
+    private static <T> List<InputData> getInputList(T o, Map<String, Set<String>> optionsMap) {
+        LinkedList<InputData> list = new LinkedList<>();
         Class<?> cls = o.getClass();
         Field[] fields = cls.getDeclaredFields();
         for (Field field : fields) {
@@ -46,43 +35,43 @@ public class FieldUtil {
                 fieldOptions = optionsMap.getOrDefault(field.getName(), Collections.emptySet());
             }
             if (!field.isAnnotationPresent(Transient.class))
-                list.add(new FieldUtil(field.getName(), fieldType, fieldOptions,
+                list.add(new InputData(field.getName(), fieldType, fieldOptions,
                                        fieldDisplay.isEmpty() ? field.getName() : fieldDisplay));
         }
         return list;
     }
 
-    public static void addObject(Model model, Object obj, String formUrl, String name,
-                                 Map<String, Set<String>> optionsMap) {
+    public static <T> void addObject(Model model, T obj, String formUrl, String name,
+                                     Map<String, Set<String>> optionsMap) {
+        Objects.requireNonNull(obj, "Unknown object");
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("object", obj);
         model.addAttribute("name", name);
         model.addAttribute("inputs", getInputList(obj, optionsMap == null ? new HashMap<>() : optionsMap));
     }
 
-    public static void addObject(Model model, Object obj, String formUrl, String formName) {
+    public static <T> void addObject(Model model, T obj, String formUrl, String formName) {
         addObject(model, obj, formUrl, formName, Collections.emptyMap());
     }
 
-    public static void addList(Model model, Iterable<?> list, String listName, String delUrl, String editUrl) {
+    public static <T> void addList(Model model, Iterable<T> list, String listName, String delUrl, String editUrl) {
         addList(model, list, listName, delUrl, editUrl, null);
     }
 
-    public static void addList(
-        Model model, Iterable<?> list, String listName, String delUrl, String editUrl, Object viewUrl) {
+    public static <T> void addList(
+        Model model, Iterable<T> list, String listName, String delUrl, String editUrl, Object viewUrl) {
+        Objects.requireNonNull(list, "No list specified");
+        Objects.requireNonNull(listName, "No list name specified");
         model.addAttribute("list", list);
         model.addAttribute("listName", listName);
-        if (delUrl != null)
-            model.addAttribute("delUrl", delUrl);
-        if (editUrl != null)
-            model.addAttribute("editUrl", editUrl);
-        if (viewUrl != null)
-            model.addAttribute("viewUrl", viewUrl);
+        model.addAttribute("delUrl", delUrl);
+        model.addAttribute("editUrl", editUrl);
+        model.addAttribute("viewUrl", viewUrl);
         if (list.iterator().hasNext())
-            model.addAttribute("mappings", getColumnList(list.iterator().next()));
+            model.addAttribute("mappings", getMappings(list.iterator().next()));
     }
 
-    private static Map<String, String> getColumnList(Object obj) {
+    private static <T> Map<String, String> getMappings(T obj) {
 
         Map<String, String> mapping = new LinkedHashMap<>();
         Class<?> cls = obj.getClass();
@@ -96,4 +85,20 @@ public class FieldUtil {
         }
         return mapping;
     }
+
+    private static class InputData {
+
+        public final String name;
+        public final String type;
+        public final Set<String> options;
+        public final String display;
+
+        public InputData(String name, String fieldType, Set<String> options, String display) {
+            this.name = name;
+            this.type = fieldType;
+            this.options = options;
+            this.display = display;
+        }
+    }
 }
+

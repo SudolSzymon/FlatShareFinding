@@ -22,8 +22,10 @@
              th:field="*{__${input.name}__}">
     </label>
       <div th:if="${input.type} == 'boolean'">
-          <input th:name="${input.name}" class="check-box"
-                 type=checkbox  th:field="*{__${input.name}__}">
+          <label>
+            <input class="check-box" th:field="*{__${input.name}__}"
+                   th:name="${input.name}" type=checkbox>
+          </label>
          <span th:text="${input.display}">label</span>
         </div>
     <label th:if="${input.type} == 'pass'">

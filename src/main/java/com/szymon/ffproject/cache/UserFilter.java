@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class UserDataCacheFilter implements DataCacheFilter<User> {
+public class UserFilter implements Filter<User> {
 
     private Double minBudget;
     private Double maxBudget;
@@ -109,11 +109,11 @@ public class UserDataCacheFilter implements DataCacheFilter<User> {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == this)
+        if (obj == this)
             return true;
-        if(!(obj instanceof UserDataCacheFilter))
+        if (!(obj instanceof UserFilter))
             return false;
-        UserDataCacheFilter fObj = (UserDataCacheFilter) obj;
+        UserFilter fObj = (UserFilter) obj;
         if (!Objects.equals(this.amenities,fObj.amenities))
             return false;
         if (!Objects.equals(this.minBudget,fObj.minBudget))

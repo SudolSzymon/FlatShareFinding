@@ -4,7 +4,7 @@ import static com.szymon.ffproject.controller.GenericController.badRequestExcept
 import static com.szymon.ffproject.service.HouseholdService.HOUSE_ADMIN_PREFIX;
 
 import com.google.common.io.Files;
-import com.szymon.ffproject.cache.UserDataCacheFilter;
+import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.controller.GenericController;
 import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.dao.UserDAO;
@@ -124,7 +124,7 @@ public class UserService {
         }
     }
 
-    public List<User> getUsers(UserDataCacheFilter filter) {
+    public List<User> getUsers(UserFilter filter) {
         return userDAO.get(filter);
     }
 

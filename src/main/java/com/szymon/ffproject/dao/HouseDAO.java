@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 public class HouseDAO extends CachedDAO<Household, String> {
 
     final HouseholdRepository repository;
+    private final DataCache<String, Household> cache;
 
-    public HouseDAO(DataCache dataCache, HouseholdRepository repository) {
-        super(dataCache);
+    public HouseDAO(DataCache<String, Household> cache, HouseholdRepository repository) {
         this.repository = repository;
+        this.cache = cache;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class HouseDAO extends CachedDAO<Household, String> {
 
     @Override
     protected LoadingCache<String, Household> getCache() {
-        return dataCache.getHouseCache();
+        return cache.getCache();
     }
 
 }
