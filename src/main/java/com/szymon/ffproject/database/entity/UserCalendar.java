@@ -3,27 +3,27 @@ package com.szymon.ffproject.database.entity;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @DynamoDBDocument
-public class UserCalendar {
+public class UserCalendar extends Entity {
 
-    private List<Event> events;
+    private Map<String, Event> events;
 
 
-    @DynamoDBTyped(DynamoDBAttributeType.L)
-    public List<Event> getEvents() {
+    @DynamoDBTyped(DynamoDBAttributeType.M)
+    public Map<String, Event> getEvents() {
         if (events == null)
-            events = new ArrayList<>();
+            events = new LinkedHashMap<>();
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(Map<String, Event> events) {
         this.events = events;
     }
 
     public void addEvent(Event event) {
-        getEvents().add(event);
+        getEvents().put(event.getEntityID(), event);
     }
 }

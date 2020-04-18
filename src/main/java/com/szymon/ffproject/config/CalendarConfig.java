@@ -10,6 +10,7 @@ import com.szymon.ffproject.database.entity.Event;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class CalendarConfig {
     private final Map<String, String> header;
     private final boolean eventLimit;
     private final String height;
-    private List<Event> events;
+    private Collection<Event> events;
 
     public CalendarConfig() {
         plugins = Arrays.asList("dayGrid", "timeGrid");
@@ -40,7 +41,7 @@ public class CalendarConfig {
         return new GsonBuilder().setPrettyPrinting().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create();
     }
 
-    public void setEvents(List<Event> eventList) {
+    public void setEvents(Collection<Event> eventList) {
         this.events = eventList;
     }
 

@@ -1,4 +1,4 @@
-<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/mainLayout}" lang="en-GB">
+<html lang="en-GB" layout:decorate="~{layout/mainLayout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <body>
 <div layout:fragment="content" class="container">
@@ -13,7 +13,7 @@
       <form action="#" enctype="multipart/form-data" method="post" th:action="@{/user/uploadAvatar}">
         <div class="form-group">
           <label>
-            <input accept="image/jpeg" class="form-control" name="image" type="file">
+            <input accept="image/*" class="form-control" name="image" type="file">
           </label>
         </div>
         <div class="text-center">
@@ -23,7 +23,7 @@
 
     </div>
   </div>
-  <div th:replace="fragments/form :: form"></div>
+  <div th:replace="fragment/form :: form"></div>
   <div>
     <a href="/user/leave">
       <button class="btn w-100 btn-danger">Leave house</button>

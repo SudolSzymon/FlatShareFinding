@@ -8,12 +8,13 @@ import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.UserRepository;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserListCache implements DataCache<UserFilter, List<User>> {
 
-    private final LoadingCache<UserFilter, List<User>> userListCache;
+    private final LoadingCache<UserFilter, Optional<List<User>>> userListCache;
 
     public UserListCache(UserRepository userRepository, DataCacheConfig config) {
         userListCache = CacheBuilder.newBuilder()
@@ -21,16 +22,16 @@ public class UserListCache implements DataCache<UserFilter, List<User>> {
             .expireAfterAccess(Duration.ofMinutes(Integer.parseInt(config.get("userListCache", "accessCacheTime"))))
             .expireAfterWrite(Duration.ofMinutes(Integer.parseInt(config.get("userListCache", "writeCacheTime"))))
             .build(
-                new CacheLoader<Filter<User>, List<User>>() {
+                new CacheLoader<Filter<User>, Optional<List<User>>>() {
                     @Override
-                    public List<User> load(Filter<User> filter) {
-                        return filter.filter(userRepository.findAll());
+                    public Optional<List<User>> load(Filter<User> filter) {
+                        return Optional.ofNullable(filter.filter(userRepository.findAll()));
                     }
                 });
     }
 
     @Override
-    public LoadingCache<UserFilter, List<User>> getCache() {
+    public LoadingCache<UserFilter, Optional<List<User>>> getCache() {
         return userListCache;
     }
 }

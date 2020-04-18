@@ -6,6 +6,7 @@
       <th scope="col" th:each="ent : ${mappings}" th:text="${ent.value}">Name</th>
       <th scope="col" th:if="${delUrl}">Delete</th>
       <th scope="col" th:if="${editUrl}">Edit</th>
+      <th scope="col" th:if="${viewUrl}">View</th>
     </tr>
     </thead>
     <tbody>
@@ -21,10 +22,13 @@
             <span th:text="${#conversions.convert(listing,'String')}"></span>
           </li>
         </ul>
-        <span th:if ="${!(listItem.__${ent.key}__ instanceof T(java.util.List)) && !(listItem.__${ent.key}__ instanceof T(java.util.Set))}" th:text="${listItem.__${ent.key}__}">elem</span>
+        <span
+            th:if="${!(listItem.__${ent.key}__ instanceof T(java.util.List)) && !(listItem.__${ent.key}__ instanceof T(java.util.Set))}"
+            th:text="${listItem.__${ent.key}__}">elem</span>
       </td>
-      <td><a th:if="${delUrl}" th:href="${delUrl} + '/' + ${listItemStat.index}">Delete</a></td>
-      <td><a th:if="${editUrl}" th:href="${editUrl} + '/' + ${listItemStat.index}">Edit</a></td>
+      <td><a th:href="${delUrl} + '/' +   ${listItem.getEntityID()}" th:if="${delUrl}">Delete</a></td>
+      <td><a th:href="${editUrl} + '/' + ${listItem.getEntityID()}" th:if="${editUrl}">Edit</a></td>
+      <td><a th:href="${viewUrl} + '/' + ${listItem.getEntityID()}" th:if="${viewUrl}">View</a></td>
     </tr>
     </tbody>
   </table>

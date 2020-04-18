@@ -10,7 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @DynamoDBDocument
-public class ShopList {
+public class ShopList extends Entity {
+
     @NotBlank
     private String name;
     @Size(max = 100)

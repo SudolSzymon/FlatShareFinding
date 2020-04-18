@@ -2,7 +2,6 @@ package com.szymon.ffproject.controller;
 
 import com.google.gson.Gson;
 import com.szymon.ffproject.config.CalendarConfig;
-import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.database.entity.Event;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
@@ -11,11 +10,10 @@ import com.szymon.ffproject.service.UserService;
 import com.szymon.ffproject.util.FieldUtil;
 import java.security.Principal;
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,10 +40,9 @@ public class CalendarController extends GenericController {
     private final ObjectProvider<CalendarConfig> configProvider;
 
     public CalendarController(HouseholdService householdService,
-                              UserService userService,
-                              S3DAO s3DAO, @Qualifier(value = "calendarConverter") Gson calendarConverter,
+                              UserService userService, @Qualifier(value = "calendarConverter") Gson calendarConverter,
                               ObjectProvider<CalendarConfig> configProvider) {
-        super(householdService, userService, s3DAO);
+        super(householdService, userService);
         this.calendarConverter = calendarConverter;
         this.configProvider = configProvider;
     }
@@ -56,11 +53,10 @@ public class CalendarController extends GenericController {
         User user = serviceU.getUser(principal);
 
         CalendarConfig config = configProvider.getObject();
-        config.setEvents(user.getCalendar().getEvents());
+        config.setEvents(user.getCalendar().getEvents().values());
         model.addAttribute("calendarConfig", calendarConverter.toJson(config));
-        List<Event> eventList = new ArrayList<>();
         Household household = serviceU.getHousehold(principal);
-        household.getMembers().stream().map(u -> serviceU.getUser(u).getCalendar().getEvents()).forEach(eventList::addAll);
+        Collection<Event> eventList = serviceU.getAllEvents(household);
         config.setEvents(eventList);
         model.addAttribute("fullCalendarConfig", calendarConverter.toJson(config));
         return "calendar";
@@ -76,7 +72,7 @@ public class CalendarController extends GenericController {
         values.put("repeatOn",
                    Arrays.stream(DayOfWeek.values()).map(Enum::toString).collect(Collectors.toCollection(LinkedHashSet::new)));
         FieldUtil.addObject(model, event, "/calendar/event/create", "Create Event", values);
-        FieldUtil.addList(model, user.getCalendar().getEvents(), "Events", "../event/delete", null);
+        FieldUtil.addList(model, user.getCalendar().getEvents().values(), "Events", "../event/delete", null);
         return "generic/genericListFormOnSide";
     }
 
@@ -92,9 +88,9 @@ public class CalendarController extends GenericController {
         return "redirect:/calendar/event/manage";
     }
 
-    @RequestMapping(value = "/event/delete/{index}")
-    public String delete(Principal principal, @PathVariable Integer index) {
-        serviceU.deleteEvent(principal, index);
+    @RequestMapping(value = "/event/delete/{id}")
+    public String delete(Principal principal, @PathVariable String id) {
+        serviceU.deleteEvent(principal, id);
         return "redirect:/calendar/event/manage";
     }
 }

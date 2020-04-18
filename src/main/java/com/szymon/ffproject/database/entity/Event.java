@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @DynamoDBDocument
-public class Event {
+public class Event extends Entity {
 
     @NotBlank
     private String title;

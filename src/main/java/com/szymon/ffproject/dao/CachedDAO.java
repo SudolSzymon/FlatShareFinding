@@ -1,6 +1,7 @@
 package com.szymon.ffproject.dao;
 
 import com.google.common.cache.LoadingCache;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,8 @@ public abstract class CachedDAO<T, U> implements DAO<T, U> {
 
     @Override
     public final boolean exist(U id) {
-        return getCache().getIfPresent(id) != null || getRepository().existsById(id);
+        Optional<T> cached = getCache().getIfPresent(id);
+        return cached != null && cached.isPresent() || getRepository().existsById(id);
     }
 
     @Override
@@ -32,8 +34,15 @@ public abstract class CachedDAO<T, U> implements DAO<T, U> {
 
     @Override
     public final T get(U id) {
+        return get(id, false);
+    }
+
+
+    public final T get(U id, boolean noCache) {
+        if (noCache)
+            return getRepository().findById(id).orElse(null);
         try {
-            return getCache().get(id);
+            return getCache().get(id).orElse(null);
         } catch (ExecutionException e) {
             logger.error("Failed to load object from " + this.getClass().getName(), e);
             return null;
@@ -45,7 +54,7 @@ public abstract class CachedDAO<T, U> implements DAO<T, U> {
 
     protected abstract void refreshCache(T object);
 
-    protected abstract LoadingCache<U, T> getCache();
+    protected abstract LoadingCache<U, Optional<T>> getCache();
 
 
 }

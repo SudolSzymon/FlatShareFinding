@@ -1,6 +1,5 @@
 package com.szymon.ffproject.controller;
 
-import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.database.entity.Expense;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.service.HouseholdService;
@@ -21,23 +20,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@SuppressWarnings("ALL")
 @Controller
 @RequestMapping(value = "/expense")
 public class ExpenseController extends GenericController {
 
 
     public ExpenseController(HouseholdService householdService,
-                             UserService userService,
-                             S3DAO s3DAO) {
-        super(householdService, userService, s3DAO);
+                             UserService userService) {
+        super(householdService, userService);
     }
 
     @GetMapping("/view")
     public String view(Model model, Principal principal) {
         Expense expense = getAttribute(model, "object", Expense.class);
         Household house = serviceU.getHousehold(principal);
-        FieldUtil.addList(model, house.getExpenses(), "Expenses", "./delete", null);
+        FieldUtil.addList(model, house.getExpenses().values(), "Expenses", "./delete", null);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("lender", house.getMembers());
         values.put("borrower", house.getMembers());
@@ -62,9 +59,9 @@ public class ExpenseController extends GenericController {
     }
 
 
-    @RequestMapping(value = "/delete/{index}")
-    public String delete(Principal principal, @PathVariable Integer index) {
-        if (!serviceH.deleteExpense(serviceU.getHousehold(principal), index, serviceU.getUser(principal)))
+    @RequestMapping(value = "/delete/{id}")
+    public String delete(Principal principal, @PathVariable String id) {
+        if (!serviceH.deleteExpense(serviceU.getHousehold(principal), id, serviceU.getUser(principal)))
             throw unAuthorisedException("user not  authorised to delete this  expense");
 
         return "redirect:/expense/view";

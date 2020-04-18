@@ -1,6 +1,5 @@
 package com.szymon.ffproject.controller;
 
-import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.service.HouseholdService;
 import com.szymon.ffproject.service.UserService;
 import java.net.URI;
@@ -21,14 +20,11 @@ public abstract class GenericController {
     protected static final Logger logger = Logger.getLogger(GenericController.class);
     protected final HouseholdService serviceH;
     protected final UserService serviceU;
-    protected final S3DAO s3DAO;
 
-    public GenericController(HouseholdService householdService, UserService userService,
-                             S3DAO s3DAO) {
+    public GenericController(HouseholdService householdService, UserService userService) {
 
         serviceH = householdService;
         serviceU = userService;
-        this.s3DAO = s3DAO;
     }
 
 
@@ -45,24 +41,24 @@ public abstract class GenericController {
     }
 
 
-    public <T> T getAttribute(Model model, String name, Class<T> type) {return getAttribute(model, name, type, true);}
+    protected <T> T getAttribute(Model model, String name, Class<T> type) {return getAttribute(model, name, type, true);}
 
-    public <T> T getAttribute(
+    protected <T> T getAttribute(
         Model model, String name, Class<T> type, boolean init) {
-        T expense = null;
+        T attribute = null;
         if (model.containsAttribute(name))
-            expense = (T) model.getAttribute(name);
+            attribute = (T) model.getAttribute(name);
         else if (init) {
             try {
-                expense = type.newInstance();
+                attribute = type.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
                 return null;
             }
         }
-        return expense;
+        return attribute;
     }
 
-    public void storeBindingResult(
+    protected void storeBindingResult(
         @ModelAttribute("object") @Valid Object object,
         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.object", bindingResult);

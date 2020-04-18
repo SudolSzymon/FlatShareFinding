@@ -8,12 +8,13 @@ import com.szymon.ffproject.config.DataCacheConfig;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
 import java.time.Duration;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HouseCache implements DataCache<String, Household> {
 
-    private final LoadingCache<String, Household> houseCache;
+    private final LoadingCache<String, Optional<Household>> houseCache;
 
     public HouseCache(HouseholdRepository householdRepository, DataCacheConfig config) {
         houseCache = CacheBuilder.newBuilder()
@@ -21,16 +22,16 @@ public class HouseCache implements DataCache<String, Household> {
             .expireAfterWrite(Duration.ofMinutes(Integer.parseInt(config.get("houseCache", "writeCacheTime"))))
             .expireAfterAccess(Duration.ofMinutes(Integer.parseInt(config.get("houseCache", "accessCacheTime"))))
             .build(
-                new CacheLoader<String, Household>() {
+                new CacheLoader<String, Optional<Household>>() {
                     @Override
-                    public Household load(String name) {
-                        return householdRepository.findById(name).orElse(null);
+                    public Optional<Household> load(String name) {
+                        return householdRepository.findById(name);
                     }
                 });
     }
 
     @Override
-    public LoadingCache<String, Household> getCache() {
+    public LoadingCache<String, Optional<Household>> getCache() {
         return houseCache;
     }
 }

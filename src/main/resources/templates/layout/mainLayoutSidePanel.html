@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-GB"
+    xmlns:layout="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.w3.org/1999/xhtml">
+
+  <div th:replace="fragment/head :: head"></div>
+
+  <style>
+    .sidePanel {
+      height: 100%;
+      width: 300px;
+      position: fixed;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      padding-top: 100px;
+      overflow-y: scroll;
+    }
+  </style>
+  <body>
+    <div th:replace="fragment/header :: header"></div>
+    <div class="sidePanel bg-dark">
+      <div layout:fragment="sidePanel"></div>
+    </div>
+    <div
+        class="jumbotron min-vh-100"
+        style="margin-left: 300px; padding-top: 100px">
+      <div layout:fragment="content"></div>
+    </div>
+  </body>
+</html>

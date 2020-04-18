@@ -3,6 +3,7 @@ package com.szymon.ffproject.database.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel.DynamoDBAttributeType;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
@@ -23,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @DynamoDBTable(tableName = "Users")
-public class User {
+public class User extends Entity {
 
     @NotBlank
     @Unmodifiable
@@ -62,15 +63,39 @@ public class User {
     @DisplayAs(display = "Expected amenities")
     @Private
     private List<String> amenities;
-    @Size(max = 10)
+    @Size(max = 1)
     @InputType(type = "valueSelect")
     @Private
-    private List<String> houseTypes;
+    private List<String> houseType;
     @Positive
     @DisplayAs(display = "Flat size in meters")
     @InputType(type = "number")
     @Private
     private Integer houseSize;
+    @Positive
+    @InputType(type = "number")
+    @Private
+    private Integer age;
+    @Positive
+    @InputType(type = "number")
+    @DisplayAs(display = "Number of people in the property")
+    @Private
+    private Integer count;
+    @Positive
+    @InputType(type = "number")
+    @DisplayAs(display = "Length of rent in months")
+    @Private
+    private Integer rent;
+    @InputType(type = "boolean")
+    @Private
+    private Boolean furnished;
+    @InputType(type = "boolean")
+    @Private
+    private Boolean unfurnished;
+    @Size(max = 1)
+    @InputType(type = "valueSelect")
+    @Private
+    private List<String> gender;
     @Transient
     @Private
     private String avatarUniqueName;
@@ -181,14 +206,14 @@ public class User {
     }
 
     @DynamoDBTyped(DynamoDBAttributeType.L)
-    public List<String> getHouseTypes() {
-        if (this.houseTypes == null)
-            houseTypes = new ArrayList<>();
-        return houseTypes;
+    public List<String> getHouseType() {
+        if (this.houseType == null)
+            houseType = new ArrayList<>();
+        return houseType;
     }
 
-    public void setHouseTypes(List<String> houseTypes) {
-        this.houseTypes = houseTypes;
+    public void setHouseType(List<String> houseType) {
+        this.houseType = houseType;
     }
 
     @DynamoDBAttribute
@@ -219,4 +244,65 @@ public class User {
         this.avatarUniqueName = avatarUniqueName;
     }
 
+    @DynamoDBAttribute
+    public Boolean getFurnished() {
+        return furnished;
+    }
+
+    public void setFurnished(Boolean furnished) {
+        this.furnished = furnished;
+    }
+
+    @DynamoDBAttribute
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @DynamoDBTyped(DynamoDBAttributeType.L)
+    public List<String> getGender() {
+        if (this.gender == null)
+            gender = new ArrayList<>();
+        return gender;
+    }
+
+    public void setGender(List<String> gender) {
+        this.gender = gender;
+    }
+
+    @DynamoDBAttribute
+    public Boolean getUnfurnished() {
+        return unfurnished;
+    }
+
+    public void setUnfurnished(Boolean unfurnished) {
+        this.unfurnished = unfurnished;
+    }
+
+    @DynamoDBAttribute
+    public Integer getRent() {
+        return rent;
+    }
+
+    public void setRent(Integer rent) {
+        this.rent = rent;
+    }
+
+    @DynamoDBAttribute
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    @DynamoDBIgnore
+    @Override
+    public String getEntityID() {
+        return name;
+    }
 }

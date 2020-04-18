@@ -4,6 +4,7 @@ import com.google.common.cache.LoadingCache;
 import com.szymon.ffproject.cache.DataCache;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.repository.HouseholdRepository;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +26,11 @@ public class HouseDAO extends CachedDAO<Household, String> {
 
     @Override
     protected void refreshCache(Household household) {
-        getCache().put(household.getName(), household);
+        getCache().put(household.getName(), Optional.of(household));
     }
 
     @Override
-    protected LoadingCache<String, Household> getCache() {
+    protected LoadingCache<String, Optional<Household>> getCache() {
         return cache.getCache();
     }
 

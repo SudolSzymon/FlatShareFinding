@@ -1,6 +1,5 @@
 package com.szymon.ffproject.service;
 
-import com.szymon.ffproject.controller.GenericController;
 import com.szymon.ffproject.dao.HouseDAO;
 import com.szymon.ffproject.database.entity.Expense;
 import com.szymon.ffproject.database.entity.Household;
@@ -13,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class HouseholdService {
@@ -29,10 +27,7 @@ public class HouseholdService {
     }
 
     public Household getHousehold(String name) {
-        Household house = houseDAO.get(name);
-        if (house != null)
-            return house;
-        throw GenericController.badRequestException("House not found");
+        return houseDAO.get(name);
     }
 
     public boolean exist(String name) {
@@ -62,28 +57,31 @@ public class HouseholdService {
     }
 
     public void addShopList(Household household, ShopList list) {
-        household.addList(list);
+        addList(household, list);
         houseDAO.save(household);
     }
 
-    public void removeShopList(Household household, Integer index) {
-        String name = getListByIndex(household, index).getName();
-        household.getLists().remove(name);
+    public void removeShopList(Household household, String id) {
+        household.getLists().remove(id);
         houseDAO.save(household);
     }
 
-    public ShopList getListByIndex(Household household, @PathVariable Integer index) {
-        return household.getLists().values().toArray(new ShopList[0])[index];
-    }
-
-    public void addShopListItem(Household household, String listName, ShopItem item) {
-        household.getList(listName).getItemList().add(item);
+    public void addShopListItem(Household household, String id, ShopItem item) {
+        getList(household, id).getItemList().add(item);
         houseDAO.save(household);
     }
 
-    public void removeShopListItem(Household household, String listName, int index) {
-        household.getList(listName).getItemList().remove(index);
+    public void removeShopListItem(Household household, String listID, String itemID) {
+        getList(household, listID).getItemList().removeIf(i -> i.match(itemID));
         houseDAO.save(household);
+    }
+
+    public ShopList getList(Household household, String id) {
+        return household.getLists().get(id);
+    }
+
+    public void addList(Household household, ShopList list) {
+        household.getLists().put(list.getEntityID(), list);
     }
 
     public void delete(Household household) {
@@ -100,13 +98,15 @@ public class HouseholdService {
             return false;
     }
 
-    public boolean deleteExpense(Household household, Integer index, User user) {
-        Expense expense = household.getExpenses().get(index);
+    public boolean deleteExpense(Household household, String id, User user) {
+        Expense expense = household.getExpenses().get(id);
         if (expense.getLender().equals(user.getName())) {
-            household.getExpenses().remove(expense);
+            household.getExpenses().remove(expense.getEntityID());
             houseDAO.save(household);
             return true;
         } else
             return false;
     }
+
+
 }

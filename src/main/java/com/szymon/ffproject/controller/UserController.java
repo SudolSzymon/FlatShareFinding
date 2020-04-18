@@ -1,20 +1,18 @@
 package com.szymon.ffproject.controller;
 
 import com.google.gson.Gson;
-import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.service.HouseholdService;
 import com.szymon.ffproject.service.UserService;
 import com.szymon.ffproject.util.Amenity;
 import com.szymon.ffproject.util.FieldUtil;
+import com.szymon.ffproject.util.Gender;
 import com.szymon.ffproject.util.HouseType;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,12 +34,12 @@ public class UserController extends GenericController {
     private final Gson gson;
 
     public UserController(HouseholdService householdService,
-                          UserService userService, S3DAO s3DAO, Gson gson) {
-        super(householdService, userService, s3DAO);
+                          UserService userService, Gson gson) {
+        super(householdService, userService);
         this.gson = gson;
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     public String login() {
         return "login";
     }
@@ -56,7 +54,7 @@ public class UserController extends GenericController {
     @PostMapping(value = "/create")
     public String create(@ModelAttribute User user) {
         if (serviceU.exists(user))
-            return "duplicate";
+            return "error/duplicate";
         serviceU.newUser(user);
         logger.info("Created user: " + gson.toJson(user));
         return "redirect:/";
@@ -75,7 +73,7 @@ public class UserController extends GenericController {
     }
 
     @RequestMapping(value = "/uploadAvatar")
-    public String hgy(Principal principal, @RequestParam MultipartFile image) throws IOException {
+    public String upload(Principal principal, @RequestParam MultipartFile image) throws IOException {
         serviceU.addImage(principal, image);
         return "redirect:/user/profile";
     }
@@ -87,11 +85,11 @@ public class UserController extends GenericController {
         if (user == null)
             user = serviceU.getUser(principal);
         Map<String, Set<String>> values = new HashMap<>();
-        values.put("amenities", Arrays.stream(Amenity.values()).map(Amenity::toString).collect(Collectors.toSet()));
-        values.put("houseTypes", Arrays.stream(HouseType.values()).map(HouseType::toString).collect(Collectors.toSet()));
+        values.put("amenities", Amenity.stringValues());
+        values.put("houseTypes", HouseType.stringValues());
+        values.put("gender", Gender.stringValues());
         FieldUtil.addObject(model, user, "/user/save", "Profile", values);
-        if (user.getAvatarUniqueName() != null)
-            model.addAttribute("imageUrl", s3DAO.getS3Link(user.getAvatarUniqueName()));
+        model.addAttribute("imageUrl", serviceU.getUserImageURL(user));
         return "profile";
     }
 
@@ -99,6 +97,7 @@ public class UserController extends GenericController {
     public String viewUser(Model model, @PathVariable String user) {
         User dbUser = serviceU.getUser(user);
         FieldUtil.addObject(model, dbUser, null, null, null);
+        model.addAttribute("imageUrl", serviceU.getUserImageURL(dbUser));
         return "profileView";
     }
 

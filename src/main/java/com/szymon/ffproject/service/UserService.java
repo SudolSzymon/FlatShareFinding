@@ -3,6 +3,7 @@ package com.szymon.ffproject.service;
 import static com.szymon.ffproject.controller.GenericController.badRequestException;
 import static com.szymon.ffproject.service.HouseholdService.HOUSE_ADMIN_PREFIX;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.controller.GenericController;
@@ -16,7 +17,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserService {
 
+    private static final Set<String> ALLOWED_PHOTO_FORMATS = Sets.newHashSet("jpg", "png", "jpeg");
     private final UserDAO userDAO;
     private final HouseholdService serviceH;
     private final S3DAO s3DAO;
@@ -95,7 +99,8 @@ public class UserService {
 
     public void addImage(Principal principal, MultipartFile image) throws IOException {
         User user = getUser(principal);
-        if (image.getOriginalFilename() != null && Files.getFileExtension(image.getOriginalFilename()).equals("jpg")) {
+        if (image.getOriginalFilename() != null && ALLOWED_PHOTO_FORMATS
+            .contains(Files.getFileExtension(image.getOriginalFilename()))) {
             String id = user.getAvatarUniqueName();
             if (id != null)
                 s3DAO.delete(id);
@@ -139,8 +144,21 @@ public class UserService {
         });
     }
 
-    public void deleteEvent(Principal principal, Integer index) {
+    public void deleteEvent(Principal principal, String id) {
         User user = getUser(principal);
-        user.getCalendar().getEvents().remove(index.intValue());
+        user.getCalendar().getEvents().remove(id);
+    }
+
+    public String getUserImageURL(User user) {
+        if (user.getAvatarUniqueName() != null)
+            return s3DAO.getS3Link(user.getAvatarUniqueName());
+        return null;
+    }
+
+
+    public Collection<Event> getAllEvents(Household household) {
+        Set<Event> events = new HashSet<>();
+        household.getMembers().stream().map(u -> getUser(u).getCalendar().getEvents().values()).forEach(events::addAll);
+        return events;
     }
 }

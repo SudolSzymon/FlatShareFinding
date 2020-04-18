@@ -1,10 +1,10 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{fragments/mainLayout}" lang="en-GB">
+      lang="en-GB" layout:decorate="~{layout/mainLayout}">
 
 <body>
 <div layout:fragment="content" class="container">
   <h1 th:text="${listName}">title</h1>
-  <div th:replace="fragments/list :: list"></div>
+  <div th:replace="fragment/list :: list"></div>
 </div>
 </body>
 </html>

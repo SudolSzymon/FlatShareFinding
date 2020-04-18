@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @DynamoDBDocument
-public class Expense {
+public class Expense extends Entity {
 
     @NotBlank
     private String title;

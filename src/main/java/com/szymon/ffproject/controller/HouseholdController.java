@@ -1,7 +1,6 @@
 package com.szymon.ffproject.controller;
 
 import com.google.common.collect.Sets;
-import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.service.HouseholdService;
 import com.szymon.ffproject.service.UserService;
@@ -27,9 +26,8 @@ import org.springframework.web.servlet.view.RedirectView;
 public class HouseholdController extends GenericController {
 
 
-    public HouseholdController(HouseholdService householdService, UserService userService,
-                               S3DAO s3DAO) {
-        super(householdService, userService, s3DAO);
+    public HouseholdController(HouseholdService householdService, UserService userService) {
+        super(householdService, userService);
     }
 
     @GetMapping("/view")

@@ -7,7 +7,9 @@ import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
@@ -36,23 +38,25 @@ public class UserDAO extends CachedDAO<User, String> {
 
     @Override
     protected void refreshCache(User user) {
-        getCache().put(user.getName(), user);
+        getCache().put(user.getName(), Optional.of(user));
     }
 
-    protected LoadingCache<String, User> getCache() {
+    protected LoadingCache<String, Optional<User>> getCache() {
         return userDataCache.getCache();
     }
 
     public List<User> get(UserFilter filter) {
         try {
-            List<User> list = userListDataCache.getCache().getIfPresent(filter);
-            if (list == null) {
+            @Nullable Optional<List<User>> list = userListDataCache.getCache().getIfPresent(filter);
+            if (list == null || !list.isPresent()) {
                 list = userListDataCache.getCache().get(new UserFilter());
-                userListDataCache.getCache().put(filter, list = filter.filter(list));
+                userListDataCache.getCache().put(filter, list = Optional
+                    .ofNullable(filter.filter(list.orElse(Collections.emptyList()))));
             }
-            return list;
+            return list.orElse(Collections.emptyList());
         } catch (ExecutionException e) {
             return Collections.emptyList();
         }
     }
+
 }
