@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @DynamoDBTable(tableName = "Users")
-public class User extends Entity {
+public class User extends DBEntity {
 
     @NotBlank
     @Unmodifiable

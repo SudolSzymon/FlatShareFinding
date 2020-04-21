@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @DynamoDBTable(tableName = "Households")
-public class Household extends Entity {
+public class Household extends DBEntity {
 
     @NotBlank
     @Unmodifiable

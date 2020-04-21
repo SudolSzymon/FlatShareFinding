@@ -3,21 +3,22 @@ package com.szymon.ffproject.dao;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import java.io.File;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.szymon.ffproject.database.entity.FileEntity;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
 
 @Component
-public class S3DAO implements DAO<File, String> {
+public class S3DAO extends DAO<FileEntity> {
 
     public static final String MAIN_BUCKET = "roomieappstorage";
     private final AmazonS3 s3Client;
 
     public S3DAO(AmazonS3 s3Client) {this.s3Client = s3Client;}
 
-    public File get(String id) {
+    public FileEntity get(String id) {
         throw new UnsupportedOperationException();
     }
 
@@ -33,14 +34,13 @@ public class S3DAO implements DAO<File, String> {
     }
 
     @Override
-    public void save(File file) {
-        s3Client.putObject(MAIN_BUCKET, file.getName(), file);
-    }
-
-    public String saveWithUUID(File file) {
-        String id = UUID.randomUUID().toString();
-        s3Client.putObject(MAIN_BUCKET, id, file);
-        return id;
+    public void executeSave(FileEntity file) {
+        ObjectMetadata data = new ObjectMetadata();
+        data.setContentType(file.getContentType());
+        data.setContentLength(file.getSize());
+        data.setCacheControl("604800");
+        data.setLastModified(Date.from(file.getModificationTime().atZone(ZoneId.systemDefault()).toInstant()));
+        s3Client.putObject(MAIN_BUCKET, file.getEntityID(), file.getFileStream(), data);
     }
 
     public String getS3Link(String key) {

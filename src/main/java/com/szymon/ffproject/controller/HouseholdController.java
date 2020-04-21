@@ -9,7 +9,6 @@ import com.szymon.ffproject.util.annotation.InputType;
 import java.security.Principal;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,7 +29,7 @@ public class HouseholdController extends GenericController {
     }
 
     @GetMapping("/view")
-    public String login(Model model, Principal principal) {
+    public String view(Model model, Principal principal) {
         Household house = serviceU.getHousehold(principal);
         model.addAttribute("members", house.getMembers());
         model.addAttribute("houseName", house.getName());
@@ -91,7 +89,7 @@ public class HouseholdController extends GenericController {
             serviceH.addMember(householdSignUpData.getName(), principal);
             serviceU.assignHouse(householdSignUpData.getName(), serviceU.getUser(principal), false);
             return new RedirectView("/house/view");
-        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Wrong household password or name");
+        } else throw unAuthorisedException("Wrong household password or name");
 
     }
 

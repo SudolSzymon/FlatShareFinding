@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HouseDAO extends CachedDAO<Household, String> {
+public class HouseDAO extends CachedDAO<Household> {
 
     final HouseholdRepository repository;
     private final DataCache<String, Household> cache;
@@ -22,11 +22,6 @@ public class HouseDAO extends CachedDAO<Household, String> {
     @Override
     protected CrudRepository<Household, String> getRepository() {
         return repository;
-    }
-
-    @Override
-    protected void refreshCache(Household household) {
-        getCache().put(household.getName(), Optional.of(household));
     }
 
     @Override

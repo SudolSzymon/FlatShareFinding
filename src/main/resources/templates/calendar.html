@@ -38,30 +38,31 @@
 <body>
 <div layout:fragment="content" class="container">
   <div class="card">
-    <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs pull-right" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user"
-             aria-selected="true">User Calendar</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="full-tab" data-toggle="tab" href="#full" role="tab" aria-controls="full"
-             aria-selected="false">Full calendar</a>
-        </li>
-      </ul>
-    </div>
-    <div class="card-body">
-      <div class="tab-content">
-        <div class="tab-pane show active" id="user" role="tabpanel" aria-labelledby="user-tab">
-          <div id="calendar"></div>
-        </div>
-        <div class="tab-pane" id="full" role="tabpanel" aria-labelledby="full-tab">
-          <div id="fullCalendar"></div>
+    <div class="card text-center">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs pull-right" role="tablist">
+          <li class="nav-item">
+            <a aria-controls="user" aria-selected="true" class="nav-link active" data-toggle="tab" href="#user" id="user-tab"
+               role="tab">User Calendar</a>
+          </li>
+          <li class="nav-item">
+            <a aria-controls="full" aria-selected="false" class="nav-link" data-toggle="tab" href="#full" id="full-tab"
+               role="tab">Full calendar</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content">
+          <div aria-labelledby="user-tab" class="tab-pane show active" id="user" role="tabpanel">
+            <div id="calendar"></div>
+          </div>
+          <div aria-labelledby="full-tab" class="tab-pane" id="full" role="tabpanel">
+            <div id="fullCalendar"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </body>
 </html>
 

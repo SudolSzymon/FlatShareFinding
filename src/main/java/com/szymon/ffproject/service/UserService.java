@@ -10,12 +10,10 @@ import com.szymon.ffproject.controller.GenericController;
 import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.dao.UserDAO;
 import com.szymon.ffproject.database.entity.Event;
+import com.szymon.ffproject.database.entity.FileEntity;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.util.EntityUtil;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
@@ -97,21 +95,16 @@ public class UserService {
         userDAO.save(user);
     }
 
-    public void addImage(Principal principal, MultipartFile image) throws IOException {
+    public void addImage(Principal principal, MultipartFile image) {
         User user = getUser(principal);
         if (image.getOriginalFilename() != null && ALLOWED_PHOTO_FORMATS
             .contains(Files.getFileExtension(image.getOriginalFilename()))) {
             String id = user.getAvatarUniqueName();
             if (id != null)
                 s3DAO.delete(id);
-            File file = new File(image.getOriginalFilename());
-            file.createNewFile();
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                fos.write(image.getBytes());
-                user.setAvatarUniqueName(s3DAO.saveWithUUID(file));
-            } finally {
-                file.delete();
-            }
+            FileEntity file = new FileEntity(image);
+            s3DAO.save(file);
+            user.setAvatarUniqueName(file.getEntityID());
         }
         userDAO.save(user);
     }

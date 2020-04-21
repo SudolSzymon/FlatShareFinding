@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @DynamoDBDocument
-public class UserCalendar extends Entity {
+public class UserCalendar extends DBEntity {
 
     private Map<String, Event> events;
 

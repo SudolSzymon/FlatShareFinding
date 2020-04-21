@@ -44,7 +44,7 @@ public class ShoppingListController extends GenericController {
     public String edit(Model model, @PathVariable String id, Principal principal) {
         Household household = serviceU.getHousehold(principal);
         ShopList list = serviceH.getList(household, id);
-        FieldUtil.addList(model, list.getItemList(), list.getName(), "../delete/item/" + id, null);
+        FieldUtil.addList(model, list.getItems().values(), list.getName(), "../delete/item/" + id, null);
         FieldUtil.addObject(model, new ShopItem(), "/shop/add/item/" + id, "New Item");
         return "generic/genericListFormOnSide";
     }
@@ -63,7 +63,7 @@ public class ShoppingListController extends GenericController {
     }
 
     @RequestMapping("/delete/item/{listID}/{itemID}")
-    public RedirectView addItem(@PathVariable String listID, Principal principal, @PathVariable String itemID) {
+    public RedirectView deleteItem(@PathVariable String listID, Principal principal, @PathVariable String itemID) {
         serviceH.removeShopListItem(serviceU.getHousehold(principal), listID, itemID);
         return new RedirectView("/shop/edit/" + listID);
     }

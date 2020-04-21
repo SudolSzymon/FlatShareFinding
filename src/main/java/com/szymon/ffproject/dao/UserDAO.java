@@ -14,7 +14,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDAO extends CachedDAO<User, String> {
+public class UserDAO extends CachedDAO<User> {
 
     private final DataCache<UserFilter, List<User>> userListDataCache;
 
@@ -36,10 +36,6 @@ public class UserDAO extends CachedDAO<User, String> {
         return repository;
     }
 
-    @Override
-    protected void refreshCache(User user) {
-        getCache().put(user.getName(), Optional.of(user));
-    }
 
     protected LoadingCache<String, Optional<User>> getCache() {
         return userDataCache.getCache();

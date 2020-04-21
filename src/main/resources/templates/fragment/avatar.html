@@ -1,0 +1,10 @@
+<div th:fragment="avatar" xmlns:th="http://www.w3.org/1999/xhtml">
+  <img alt="img" class="rounded-circle" src="https://roomieappstorage.s3.eu-west-2.amazonaws.com/staticData/account.svg"
+       style="width: 40%; margin-bottom: 30px; margin-top: 50px" th:if="${imageUrl == null}">
+  <img alt="img" class="rounded-circle" style="width: 40%; margin-bottom: 30px; margin-top: 50px"
+       th:if="${imageUrl != null}" th:src="${imageUrl}">
+</div>
+
+
+
+

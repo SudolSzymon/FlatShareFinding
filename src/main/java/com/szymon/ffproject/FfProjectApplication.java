@@ -1,6 +1,7 @@
 package com.szymon.ffproject;
 
 import com.szymon.ffproject.database.DBInitializer;
+import com.szymon.ffproject.util.AppContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,7 @@ public class FfProjectApplication {
 
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(FfProjectApplication.class, args);
+        AppContext.init(applicationContext);
         DBInitializer initializer = (DBInitializer) applicationContext.getBean("DBInitializer");
         initializer.init();
     }

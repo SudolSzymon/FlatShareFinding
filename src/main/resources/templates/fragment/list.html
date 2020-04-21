@@ -22,13 +22,18 @@
             <span th:text="${#conversions.convert(listing,'String')}"></span>
           </li>
         </ul>
+        <ul th:if="${listItem.__${ent.key}__ instanceof T(java.util.Map)}">
+          <li th:each="listing: ${listItem.__${ent.key}__}">
+            <span th:text="${#conversions.convert(listing.value,'String')}"></span>
+          </li>
+        </ul>
         <span
-            th:if="${!(listItem.__${ent.key}__ instanceof T(java.util.List)) && !(listItem.__${ent.key}__ instanceof T(java.util.Set))}"
+            th:if="${!(listItem.__${ent.key}__ instanceof T(java.util.List)) && !(listItem.__${ent.key}__ instanceof T(java.util.Set)) && !(listItem.__${ent.key}__ instanceof T(java.util.Map))}"
             th:text="${listItem.__${ent.key}__}">elem</span>
       </td>
-      <td><a th:href="${delUrl} + '/' +   ${listItem.getEntityID()}" th:if="${delUrl}">Delete</a></td>
-      <td><a th:href="${editUrl} + '/' + ${listItem.getEntityID()}" th:if="${editUrl}">Edit</a></td>
-      <td><a th:href="${viewUrl} + '/' + ${listItem.getEntityID()}" th:if="${viewUrl}">View</a></td>
+      <td th:if="${delUrl}"><a th:href="${delUrl} + '/' +   ${listItem.getEntityID()}">Delete</a></td>
+      <td th:if="${editUrl}"><a th:href="${editUrl} + '/' + ${listItem.getEntityID()}">Edit</a></td>
+      <td th:if="${viewUrl}"><a th:href="${viewUrl} + '/' + ${listItem.getEntityID()}">View</a></td>
     </tr>
     </tbody>
   </table>

@@ -14,7 +14,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.Future;
@@ -23,7 +22,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @DynamoDBDocument
-public class Event extends Entity {
+public class Event extends DBEntity {
 
     @NotBlank
     private String title;
@@ -105,20 +104,6 @@ public class Event extends Entity {
         this.backgroundColor = backgroundColor;
     }
 
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, start, end);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Event))
-            return false;
-        Event event = (Event) obj;
-        return obj == this || (Objects.equals(title, event.title) && Objects.equals(start, event.start) && Objects
-            .equals(end, event.end) && Objects.equals(endTime, event.endTime) && Objects.equals(startTime, event.startTime));
-    }
 
     @DynamoDBAttribute
     public boolean isRepeat() {

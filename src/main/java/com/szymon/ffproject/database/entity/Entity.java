@@ -1,29 +1,15 @@
 package com.szymon.ffproject.database.entity;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
-@DynamoDBTable(tableName = "")
-public abstract class Entity {
+public interface Entity {
 
-    private String entityID;
+    String getEntityID();
 
-    public Entity() {
-        entityID = UUID.randomUUID().toString();
-    }
+    LocalDateTime getCreationTime();
 
-    @DynamoDBAttribute
-    public String getEntityID() {
-        return entityID;
-    }
+    LocalDateTime getModificationTime();
 
-    public void setEntityID(String id) {
-        entityID = id;
-    }
+    void setModificationTime(LocalDateTime modificationTime);
 
-
-    public final boolean match(String id) {
-        return this.entityID.equals(id);
-    }
 }

@@ -1,13 +1,20 @@
 package com.szymon.ffproject.dao;
 
-public interface DAO<T, U> {
+import com.szymon.ffproject.database.entity.Entity;
+import java.time.LocalDateTime;
 
-    void save(T object);
+public abstract class DAO<T extends Entity> {
 
+    public final void save(T entity) {
+        entity.setModificationTime(LocalDateTime.now());
+        executeSave(entity);
+    }
 
-    T get(U id);
+    protected abstract void executeSave(T entity);
 
-    boolean exist(U id);
+    public abstract T get(String id);
 
-    void delete(U id);
+    public abstract boolean exist(String id);
+
+    public abstract void delete(String id);
 }

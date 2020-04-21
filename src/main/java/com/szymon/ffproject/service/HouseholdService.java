@@ -53,7 +53,8 @@ public class HouseholdService {
     }
 
     public boolean verifyPassword(String name, String pass) {
-        return passwordEncoder.matches(pass, getHousehold(name).getPassword());
+        Household household = getHousehold(name);
+        return household != null && passwordEncoder.matches(pass, household.getPassword());
     }
 
     public void addShopList(Household household, ShopList list) {
@@ -67,12 +68,12 @@ public class HouseholdService {
     }
 
     public void addShopListItem(Household household, String id, ShopItem item) {
-        getList(household, id).getItemList().add(item);
+        getList(household, id).getItems().put(item.getEntityID(), item);
         houseDAO.save(household);
     }
 
     public void removeShopListItem(Household household, String listID, String itemID) {
-        getList(household, listID).getItemList().removeIf(i -> i.match(itemID));
+        getList(household, listID).getItems().remove(itemID);
         houseDAO.save(household);
     }
 
