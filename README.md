@@ -2,7 +2,7 @@
 
 To run project: 
 - Simplest solution 
-    1. access http://roomie.eu-west-2.elasticbeanstalk.com/home in the browser and view  deployed version of the application 
+    1. Access http://roomie.eu-west-2.elasticbeanstalk.com/home in the browser and view  deployed version of the application 
     2. Enjoy!!! 
 - Alternative 
     0. Make sure  **port 5000 is free!!!**
@@ -13,4 +13,5 @@ and AWS_SECRET_ACCESS_KEY KI2rbMLGuWjFGiz29F1XVq8eMhyRQi8T2YLJKLb5
         -  execute terminal command  mvn spring-boot:run 
         or 
         - execute command  java -jar  .\ffproject-1.2.1-SNAPSHOT.jar 
-    3. Enjoy!
+    3. Access http://localhost:5000/home in the  browser
+    4. Enjoy!
