@@ -86,7 +86,7 @@ public class UserController extends GenericController {
             user = serviceU.getUser(principal);
         Map<String, Set<String>> values = new HashMap<>();
         values.put("amenities", Amenity.stringValues());
-        values.put("houseTypes", HouseType.stringValues());
+        values.put("houseType", HouseType.stringValues());
         values.put("gender", Gender.stringValues());
         FieldUtil.addObject(model, user, "/user/save", "Profile", values);
         model.addAttribute("imageUrl", serviceU.getUserImageURL(user));

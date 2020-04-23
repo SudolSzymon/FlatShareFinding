@@ -5,7 +5,6 @@ import static com.szymon.ffproject.service.HouseholdService.HOUSE_ADMIN_PREFIX;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.controller.GenericController;
 import com.szymon.ffproject.dao.S3DAO;
 import com.szymon.ffproject.dao.UserDAO;
@@ -14,12 +13,16 @@ import com.szymon.ffproject.database.entity.FileEntity;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.util.EntityUtil;
+import com.szymon.ffproject.util.UserFilter;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private static final Set<String> ALLOWED_PHOTO_FORMATS = Sets.newHashSet("jpg", "png", "jpeg");
     private final UserDAO userDAO;
     private final HouseholdService serviceH;
@@ -102,9 +106,16 @@ public class UserService {
             String id = user.getAvatarUniqueName();
             if (id != null)
                 s3DAO.delete(id);
-            FileEntity file = new FileEntity(image);
-            s3DAO.save(file);
-            user.setAvatarUniqueName(file.getEntityID());
+            FileEntity file = null;
+            try {
+                file = new FileEntity(image);
+                s3DAO.save(file);
+                user.setAvatarUniqueName(file.getEntityID());
+            } catch (IOException e) {
+                LOGGER.error("Unable to turn image into file entity", e);
+                user.setAvatarUniqueName(null);
+                throw badRequestException("Unable to turn image into file entity");
+            }
         }
         userDAO.save(user);
     }

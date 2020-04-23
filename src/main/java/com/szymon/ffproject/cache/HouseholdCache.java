@@ -12,11 +12,11 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HouseCache implements DataCache<String, Household> {
+public class HouseholdCache implements DataCache<String, Household> {
 
     private final LoadingCache<String, Optional<Household>> houseCache;
 
-    public HouseCache(HouseholdRepository householdRepository, DataCacheConfig config) {
+    public HouseholdCache(HouseholdRepository householdRepository, DataCacheConfig config) {
         houseCache = CacheBuilder.newBuilder()
             .maximumSize(Integer.parseInt(config.get("houseCache", "maxSize")))
             .expireAfterWrite(Duration.ofMinutes(Integer.parseInt(config.get("houseCache", "writeCacheTime"))))

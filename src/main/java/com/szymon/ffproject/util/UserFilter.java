@@ -1,4 +1,4 @@
-package com.szymon.ffproject.cache;
+package com.szymon.ffproject.util;
 
 import com.google.gson.Gson;
 import com.szymon.ffproject.database.entity.User;
@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 
 public class UserFilter implements Filter<User> {
 
+    private String city;
     @InputType(type = "number")
     private Double minBudget;
     @InputType(type = "number")
@@ -59,6 +60,7 @@ public class UserFilter implements Filter<User> {
             .filter(user -> gender == null || user.getGender().containsAll(gender))
             .filter(user -> furnished == null || user.getFurnished() != null && user.getFurnished().equals(furnished))
             .filter(user -> unfurnished == null || user.getUnfurnished() != null && user.getUnfurnished().equals(unfurnished))
+            .filter(user -> city == null || city.isEmpty() || city.equalsIgnoreCase(user.getCity()))
             .collect(Collectors.toList());
     }
 
@@ -201,9 +203,17 @@ public class UserFilter implements Filter<User> {
         this.rentLengthMax = rentLengthMax;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return AppContext.getBeanByClass(Gson.class).toJson(this);
     }
 
     @Override
@@ -243,6 +253,8 @@ public class UserFilter implements Filter<User> {
         if (!Objects.equals(this.rentLengthMin, fObj.rentLengthMin))
             return false;
         if (!Objects.equals(this.gender, fObj.gender))
+            return false;
+        if (!Objects.equals(this.city, fObj.city))
             return false;
         return Objects.equals(this.houseTypes, fObj.houseTypes);
     }

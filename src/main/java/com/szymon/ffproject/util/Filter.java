@@ -1,4 +1,4 @@
-package com.szymon.ffproject.cache;
+package com.szymon.ffproject.util;
 
 import java.util.List;
 import java.util.function.Function;

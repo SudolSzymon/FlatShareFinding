@@ -1,6 +1,5 @@
 package com.szymon.ffproject.controller;
 
-import com.google.common.collect.Sets;
 import com.szymon.ffproject.database.entity.Household;
 import com.szymon.ffproject.service.HouseholdService;
 import com.szymon.ffproject.service.UserService;
@@ -69,7 +68,7 @@ public class HouseholdController extends GenericController {
     public String create(@ModelAttribute Household household, Principal principal) {
         if (serviceH.exist(household.getName()))
             return "error/duplicate";
-        serviceH.newHousehold(household, Sets.newHashSet(principal.getName()));
+        serviceH.newHousehold(household, principal);
         serviceU.assignHouse(household.getName(), serviceU.getUser(principal), true);
 
         return "redirect:/house/view";

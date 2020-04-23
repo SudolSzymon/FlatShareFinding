@@ -1,6 +1,5 @@
 package com.szymon.ffproject.controller;
 
-import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.service.HouseholdService;
 import com.szymon.ffproject.service.UserService;
@@ -8,6 +7,7 @@ import com.szymon.ffproject.util.Amenity;
 import com.szymon.ffproject.util.FieldUtil;
 import com.szymon.ffproject.util.Gender;
 import com.szymon.ffproject.util.HouseType;
+import com.szymon.ffproject.util.UserFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

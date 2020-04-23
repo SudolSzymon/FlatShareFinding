@@ -1,5 +1,6 @@
 package com.szymon.ffproject.controller;
 
+import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -34,7 +35,8 @@ public class LoggingInterceptor implements HandlerInterceptor {
         long execTime = renderStart - execStart;
         long renderingDuration = System.currentTimeMillis() - renderStart;
         String path = request.getServletPath();
-        String username = request.getUserPrincipal().getName();
+        Principal userPrincipal = request.getUserPrincipal();
+        String username = userPrincipal == null ? "NotAuthenticated" : userPrincipal.getName();
         logger.info(
             String.format("[REQUEST METADATA] User: %s, Path: %s, Executed in: %s, Rendered in: %s", username, path, execTime,
                           renderingDuration));

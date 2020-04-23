@@ -9,12 +9,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HouseDAO extends CachedDAO<Household> {
+public class HouseholdDAO extends CachedDAO<Household> {
 
     final HouseholdRepository repository;
     private final DataCache<String, Household> cache;
 
-    public HouseDAO(DataCache<String, Household> cache, HouseholdRepository repository) {
+    public HouseholdDAO(DataCache<String, Household> cache, HouseholdRepository repository) {
         this.repository = repository;
         this.cache = cache;
     }

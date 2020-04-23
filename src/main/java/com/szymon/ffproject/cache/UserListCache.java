@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import com.szymon.ffproject.config.DataCacheConfig;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.UserRepository;
+import com.szymon.ffproject.util.Filter;
+import com.szymon.ffproject.util.UserFilter;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;

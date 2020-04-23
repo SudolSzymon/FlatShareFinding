@@ -99,6 +99,8 @@ public class User extends DBEntity {
     @Transient
     @Private
     private String avatarUniqueName;
+    @Private
+    private String city;
 
     @DynamoDBHashKey
     public String getName() {
@@ -304,5 +306,14 @@ public class User extends DBEntity {
     @Override
     public String getEntityID() {
         return name;
+    }
+
+    @DynamoDBAttribute
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

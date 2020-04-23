@@ -2,9 +2,9 @@ package com.szymon.ffproject.dao;
 
 import com.google.common.cache.LoadingCache;
 import com.szymon.ffproject.cache.DataCache;
-import com.szymon.ffproject.cache.UserFilter;
 import com.szymon.ffproject.database.entity.User;
 import com.szymon.ffproject.database.repository.UserRepository;
+import com.szymon.ffproject.util.UserFilter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
